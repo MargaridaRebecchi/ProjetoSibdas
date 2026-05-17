@@ -6,24 +6,31 @@
  font-family: Arial, Helvetica, sans-serif; /* Define a fonte do texto da página */
 } 
 
+/* NAVBAR*/
 .bng-navbar {
- background-color: #343a40;
+ background-color: #0a4f6e;
  display: flex; /* Alinha os elementos em linha */
  align-items: center;/* Centraliza os itens verticalmente */
  justify-content: space-between;/* Distribui os itens igualmente */
  padding: 10px 20px;/* Adiciona espaçamento interno */
+ position: sticky; /* Fixa a barra no topo ao fazer scroll */
+ top: 0; /* A barra fica colada ao topo */
 }
 .bng-navbar div {
  display: flex;
  align-items: center;
 }
+
+/* Estilo do logótipo na barra de navegação */
 .bng-navbar img {
  height: 50px; /* Ajusta a altura do logo */
  margin-right: 10px;/* Adiciona espaço entre o logo e o texto */
 }
+
+/* Estilo do texto com o nome da empresa */
 .bng-navbar h3 {
  font-size: 1.5em; /* Define o tamanho do texto */
- color: #dddddd; /* Cor do texto em cinza claro */
+ color: #ffffff; /* Cor do texto em cinza claro */
 } 
 
 /* Estilos para os links centrais da navegação */
@@ -35,50 +42,122 @@
  font-size: 1.5em; /* Aumenta o tamanho da fonte dos links */
  margin: 0px 50px; /* Adiciona espaçamento horizontal entre os links */
  text-decoration: none; /* Remove o sublinhado */
- color: #dddddd; /* Define a cor dos links */
+ color: #ffffff; /* Define a cor dos links */
 }
+
+/*Passar o rato pelos links*/
 .container-navegacao a:hover {
- color: #ffffff; /* Muda a cor ao passar o mouse */
+ color: #2dd4a0; /* Muda a cor ao passar o mouse */
 } 
 
 /* Estilos para o botão da Área Cliente */
 .nav-cliente a {
- color: #dddddd; /* Cor do texto */
+ color: #ffffff; /* Cor do texto */
  text-decoration: none; /* Remove sublinhado */
  font-size: 1.5em; /* Tamanho da fonte */
  padding: 10px; /* Espaçamento interno */
  border-radius: 5px; /* Bordas arredondadas */
  transition: background 0.3s; /* Efeito suave na transição */
 }
-/* Efeito ao passar o mouse */
+/* Efeito ao passar o rato no botão da áre ade Cliente */
 .nav-cliente a:hover {
- background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+ background-color: #1a7a9e; /* Cor de fundo ao passar o rato */
 } 
 
 /* Estilos para o Rodapé */
-.footer-container {
- display: flex; /* Ativa o layout flexível */
- background-color: #343a40; /* Cor de fundo escura */
- color: white; /* Cor do texto */
- padding: 40px 20px; /* Espaçamento interno */
- flex-wrap: wrap; /* Permite que os itens fiquem responsivos */
+/* FOOTER */
+
+.footer {
+    background-color: #073a52;
+    color: rgba(255,255,255,0.7);
+    padding: 4rem 0 2rem;
+    font-family: 'DM Sans', sans-serif;
 }
-.footer-section {
- flex: 1; /* Faz com que as seções tenham tamanhos iguais */
- min-width: 250px; /* Garante que cada seção tenha um tamanho mínimo */
- padding: 10px; /* Espaçamento interno */
- text-align: center; /* Centraliza o texto */
+
+.footer-logo {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }
-.footer-section strong {
- font-size: 1.2rem; /* Define o tamanho da fonte dos títulos */
- display: block; /* Faz com que ocupe toda a largura */
- margin-bottom: 10px; /* Adiciona um espaço abaixo do título */
- color: #f8f9fa; /* Cor do texto */
+
+.footer-logo-icone {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #1a7a9e, #2dd4a0);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
 }
-.footer-section p {
- font-size: 1rem; /* Define o tamanho da fonte dos parágrafos */
- color: #d6d6d6; /* Cor do texto mais suave */
-} 
+
+.footer-desc {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+}
+
+.footer-titulo-coluna {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1.2rem;
+}
+
+.footer-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-lista li {
+    margin-bottom: 0.6rem;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.footer-lista a {
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    transition: 0.3s;
+}
+
+.footer-lista a:hover {
+    color: #2dd4a0;
+    padding-left: 4px;
+}
+
+.footer-divisor {
+    border-color: rgba(255,255,255,0.08);
+    margin: 2.5rem 0 1.5rem;
+}
+
+.footer-base {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.footer-copyright {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.35);
+}
+
+.footer i {
+    color: #2dd4a0;
+    opacity: 0.7;
+}
 
 /* Texto Genérico */
 .container-texto-generico {
@@ -86,6 +165,17 @@
  justify-content: center; /* Centraliza os elementos horizontalmente */
  flex-wrap: wrap; /* Permite que os elementos quebrem linha em telas menores */
  gap: 20px; /* Adiciona espaço entre os elementos */
- padding: 40px; /* Espaçamento interno para melhor organização */
+ padding: 100px 40px; /* Espaçamento interno para melhor organização */
  text-align: center; /* Centraliza o texto dentro dos artigos */
+ min-height: 100vh; /* Garante altura mínima de uma janela (ecrã) */
+ background-color: #f5f8fa;
+ color: #1a2c35;
+} 
+
+/* Seletor Universal - Remove margens e preenchimentos padrão */
+* {
+ margin: 0; /* Remove margens padrão */
+ padding: 0; /* Remove preenchimento padrão */
+ box-sizing: border-box; /* Inclui a borda e o preenchimento no cálculo do tamanho */
+ font-family: Arial, Helvetica, sans-serif; /* Define a fonte padrão */
 } 
