@@ -1,0 +1,91 @@
+/* * é um seletor universal, ou seja, aplica-se a todos os elementos HTML da página */
+* {
+ margin: 0; /* Remove todas as margens padrão */
+ padding: 0; /* Remove os preenchimentos internos padrão */
+ box-sizing: border-box; /* Garante que a largura e altura dos elementos incluam a borda */
+ font-family: Arial, Helvetica, sans-serif; /* Define a fonte do texto da página */
+} 
+
+.bng-navbar {
+ background-color: #343a40;
+ display: flex; /* Alinha os elementos em linha */
+ align-items: center;/* Centraliza os itens verticalmente */
+ justify-content: space-between;/* Distribui os itens igualmente */
+ padding: 10px 20px;/* Adiciona espaçamento interno */
+}
+.bng-navbar div {
+ display: flex;
+ align-items: center;
+}
+.bng-navbar img {
+ height: 50px; /* Ajusta a altura do logo */
+ margin-right: 10px;/* Adiciona espaço entre o logo e o texto */
+}
+.bng-navbar h3 {
+ font-size: 1.5em; /* Define o tamanho do texto */
+ color: #dddddd; /* Cor do texto em cinza claro */
+} 
+
+/* Estilos para os links centrais da navegação */
+.container-navegacao {
+ text-align: center; /* Centraliza os links */
+ padding: 20px; /* Adiciona espaçamento interno */
+}
+.container-navegacao a {
+ font-size: 1.5em; /* Aumenta o tamanho da fonte dos links */
+ margin: 0px 50px; /* Adiciona espaçamento horizontal entre os links */
+ text-decoration: none; /* Remove o sublinhado */
+ color: #dddddd; /* Define a cor dos links */
+}
+.container-navegacao a:hover {
+ color: #ffffff; /* Muda a cor ao passar o mouse */
+} 
+
+/* Estilos para o botão da Área Cliente */
+.nav-cliente a {
+ color: #dddddd; /* Cor do texto */
+ text-decoration: none; /* Remove sublinhado */
+ font-size: 1.5em; /* Tamanho da fonte */
+ padding: 10px; /* Espaçamento interno */
+ border-radius: 5px; /* Bordas arredondadas */
+ transition: background 0.3s; /* Efeito suave na transição */
+}
+/* Efeito ao passar o mouse */
+.nav-cliente a:hover {
+ background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+} 
+
+/* Estilos para o Rodapé */
+.footer-container {
+ display: flex; /* Ativa o layout flexível */
+ background-color: #343a40; /* Cor de fundo escura */
+ color: white; /* Cor do texto */
+ padding: 40px 20px; /* Espaçamento interno */
+ flex-wrap: wrap; /* Permite que os itens fiquem responsivos */
+}
+.footer-section {
+ flex: 1; /* Faz com que as seções tenham tamanhos iguais */
+ min-width: 250px; /* Garante que cada seção tenha um tamanho mínimo */
+ padding: 10px; /* Espaçamento interno */
+ text-align: center; /* Centraliza o texto */
+}
+.footer-section strong {
+ font-size: 1.2rem; /* Define o tamanho da fonte dos títulos */
+ display: block; /* Faz com que ocupe toda a largura */
+ margin-bottom: 10px; /* Adiciona um espaço abaixo do título */
+ color: #f8f9fa; /* Cor do texto */
+}
+.footer-section p {
+ font-size: 1rem; /* Define o tamanho da fonte dos parágrafos */
+ color: #d6d6d6; /* Cor do texto mais suave */
+} 
+
+/* Texto Genérico */
+.container-texto-generico {
+ display: flex; /* Ativa o layout flexível */
+ justify-content: center; /* Centraliza os elementos horizontalmente */
+ flex-wrap: wrap; /* Permite que os elementos quebrem linha em telas menores */
+ gap: 20px; /* Adiciona espaço entre os elementos */
+ padding: 40px; /* Espaçamento interno para melhor organização */
+ text-align: center; /* Centraliza o texto dentro dos artigos */
+} 
