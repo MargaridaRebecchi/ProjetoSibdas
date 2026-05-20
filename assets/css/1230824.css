@@ -21,6 +21,11 @@ h1, h2, h3 {
   --cor-fundo: #f5f8fa;  /* Cor de fundo geral da página */
   --cor-texto: #1a2c35;  /* Cor do texto principal */
   --branco: #ffffff;
+  --cor-primaria-clara: #1a7a9e;
+  --cor-branco: #ffffff;
+  --fonte-titulo: 'Sora', sans-serif;
+  --fonte-corpo: 'DM Sans', sans-serif;
+  --transicao: all 0.3s ease;
 }
 
 /* NAVBAR*/
@@ -142,6 +147,152 @@ h1, h2, h3 {
 .nav-cliente a:hover {
  background-color: #1a7a9e; /* Cor de fundo ao passar o rato */
 } 
+
+/* HERO*/ 
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--cor-primaria-escura) 0%, var(--cor-primaria) 50%, var(--cor-primaria-clara) 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(45, 212, 160, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(45, 212, 160, 0.08) 0%, transparent 60%);
+}
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-conteudo {
+  position: relative;
+  z-index: 2;
+  color: white;
+  text-align: center; /* centra tudo */  
+  margin: 0 auto; /* centra bloco */
+} 
+.hero-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+.hero-titulo .destaque {
+  color: var(--cor-acento);
+  position: relative;
+}
+.hero-descricao {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.78);
+  max-width: 520px;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  line-height: 1.8;
+  text-align: center; /* centra tudo */  
+  margin: 0 auto; /* centra bloco */
+}
+.hero-botoes {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem; /* afasta os botões do texto*/
+  margin-bottom: 3.5rem;
+}
+.hero-estatisticas {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  text-align: left;
+}
+.hero-stat-numero {
+  font-family: var(--fonte-titulo);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cor-acento);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 400;
+  margin-top: 0.2rem;
+}
+.btn-primario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--cor-acento);
+  color: var(--cor-primaria-escura);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transicao);
+  box-shadow: 0 4px 20px rgba(45, 212, 160, 0.3);
+}
+
+.btn-primario:hover {
+  background: #1db88a;
+  transform: translateY(-2px);
+  color: white;
+}
+
+.btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: white;
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  border: 2px solid rgba(255,255,255,0.4);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transicao);
+}
+
+.btn-secundario:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.7);
+  color: white;
+  transform: translateY(-2px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Estilos para o Rodapé */
 /* FOOTER */
