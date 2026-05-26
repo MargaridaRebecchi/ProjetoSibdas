@@ -20,12 +20,14 @@ h1, h2, h3 {
   --cor-acento: #2dd4a0;   /* Cor de destaque (verde para botões e realces) */
   --cor-fundo: #f5f8fa;  /* Cor de fundo geral da página */
   --cor-texto: #1a2c35;  /* Cor do texto principal */
+  --cor-acento-escuro: #1db88a;
   --branco: #ffffff;
   --cor-primaria-clara: #1a7a9e;
   --cor-branco: #ffffff;
   --fonte-titulo: 'Sora', sans-serif;
   --fonte-corpo: 'DM Sans', sans-serif;
   --transicao: all 0.3s ease;
+  --raio-grande: 24px;
 }
 
 /* NAVBAR*/
@@ -483,6 +485,72 @@ width: 100%;}
   margin-bottom: 0.2rem;
   text-align: left;
 }
+
+/* SECÇÃO TESTEMUNHOS */
+.secao-testemunhos {
+  padding: 6rem 0;
+  background: var(--cor-fundo);
+}
+.testemunho-cartao {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--raio-grande);
+  padding: 2rem;
+  border: 1px solid #0a4f6e;
+  height: 100%;
+  position: relative;
+  transition: var(--transicao);
+}
+.testemunho-cartao:hover {
+  box-shadow: var(--sombra-media);
+  transform: translateY(-4px);
+}
+.testemunho-aspas {
+  font-size: 3rem;
+  color: var(--cor-acento);
+  font-family: Georgia, serif;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.testemunho-texto {
+  font-size: 0.95rem;
+  color: var(--cor-texto-suave);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+.testemunho-autor {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-top: auto;
+  text-align: left;
+}
+.testemunho-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: white;
+  flex-shrink: 0;
+}
+.testemunho-nome {
+  font-family: var(--fonte-titulo);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cor-primaria-escura);
+  
+}
+.testemunho-cargo {
+  font-size: 0.78rem;
+  color: var(--cor-texto-suave);
+}
+
 
 
 /* Estilos para o Rodapé */
