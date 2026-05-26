@@ -551,6 +551,96 @@ width: 100%;}
   color: var(--cor-texto-suave);
 }
 
+/* SECÇÃO CONTACTO */
+.contacto-wrapper {
+  background: var(--cor-branco);
+  border-radius: var(--raio-grande);
+  padding: 3.5rem;
+  box-shadow: var(--sombra-suave);
+  border: 1px solid var(--cor-borda);
+}
+.form-label-medgest {
+  font-family: var(--fonte-titulo);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-primaria-escura);
+  margin-bottom: 0.4rem;
+}
+.form-control-medgest {
+  border: 1.5px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 0.75rem 1rem;
+  font-family: var(--fonte-corpo);
+  font-size: 0.92rem;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  transition: var(--transicao);
+  width: 100%;
+}
+.form-control-medgest:focus {
+  outline: none;
+  border-color: var(--cor-primaria-clara);
+  background: var(--cor-branco);
+  box-shadow: 0 0 0 3px rgba(26, 122, 158, 0.12);
+}
+.form-control-medgest.erro {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+.form-controle-mensagem {
+  font-size: 0.78rem;
+  margin-top: 0.3rem;
+}
+.form-controle-mensagem.erro { color: #ef4444; }
+.form-controle-mensagem.sucesso { color: var(--cor-acento-escuro); }
+.contacto-info {
+  padding-left: 2rem;
+}
+
+.contacto-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: var(--cor-fundo-alt);
+  border-radius: var(--raio);
+  margin-bottom: 1rem;
+  transition: var(--transicao);
+}
+.contacto-info-item:hover {
+  background: var(--cor-borda);
+}
+.contacto-icone {
+  width: 40px;
+  height: 40px;
+  background: var(--cor-primaria);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.contacto-detalhe-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+  margin-bottom: 0.2rem;
+}
+.contacto-detalhe-valor {
+  font-size: 0.92rem;
+  color: var(--cor-primaria-escura);
+  font-weight: 500;
+}
+
+
+
+
+
+
+
 
 
 /* Estilos para o Rodapé */

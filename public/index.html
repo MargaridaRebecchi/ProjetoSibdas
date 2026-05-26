@@ -376,13 +376,122 @@
     </div>
   </section>
 
-    <!-- Seção "Conteudo da pagina - Contacto" -->
-    <section class="container-texto-generico" id="contacto">
-        <section>
-            <h2>Contacto</h2>
-            <p>Entre em contacto connosco.</p>
-        </section>
-    </section>
+    <!-- Seção "Conteudo da pagina - CONTACTO" -->
+     <section id="contacto" class="secao-contacto">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="secao-etiqueta animar-entrada">Entre em contacto</div>
+        <h2 class="secao-titulo animar-entrada" data-delay="100">Fale connosco</h2>
+        <p class="secao-subtitulo animar-entrada" data-delay="150">
+          Solicite uma demonstração gratuita ou esclareça as suas dúvidas.
+        </p>
+      </div>
+
+      <div class="contacto-wrapper animar-entrada" data-delay="100">
+        <div class="row g-5">
+
+            <!-- Formulário -->
+          <div class="col-lg-7">
+            <form id="formContacto" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label-medgest" for="nome">Nome completo <span style="color:#ef4444;">*</span></label>
+                  <input type="text" id="nome" class="form-control-medgest" required
+                         placeholder="Ex: Maria Santos" aria-describedby="msg-nome" />
+                  <div id="msg-nome" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-medgest" for="email">Email<span style="color:#ef4444;">*</span></label>
+                  <input type="email" id="email" class="form-control-medgest" required
+                         placeholder="Ex: maria@hospital.pt" aria-describedby="msg-email" />
+                  <div id="msg-email" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-medgest" for="telefone">Telefone</label>
+                  <input type="tel" id="telefone" class="form-control-medgest"
+                         placeholder="Ex: 222 000 000" aria-describedby="msg-telefone" />
+                  <div id="msg-telefone" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-medgest" for="instituicao">Instituição <span style="color:#ef4444;">*</span></label>
+                  <input type="text" id="instituicao" class="form-control-medgest" required
+                         placeholder="Ex: Centro Hospitalar Lisboa Norte" aria-describedby="msg-instituicao" />
+                  <div id="msg-instituicao" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label-medgest" for="assunto">Assunto <span style="color:#ef4444;">*</span></label>
+                  <select id="assunto" class="form-control-medgest" required aria-describedby="msg-assunto">
+                    <option value="">Selecione um assunto…</option>
+                    <option value="demo">Solicitar demonstração</option>
+                    <option value="orcamento">Pedido de orçamento</option>
+                    <option value="suporte">Suporte técnico</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                  <div id="msg-assunto" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label-medgest" for="mensagem">Mensagem <span style="color:#ef4444;">*</span></label>
+                  <textarea id="mensagem" class="form-control-medgest" required rows="5"
+                            placeholder="Faça a sua questão" aria-describedby="msg-mensagem"></textarea>
+                  <div id="msg-mensagem" class="form-controle-mensagem" aria-live="polite"></div>
+                </div>
+                <div class="col-12">
+                  <p style="font-size: 0.8rem; color: var(--cor-texto-suave); margin-bottom: 1rem;">
+                    <span style="color:#ef4444;">*</span> Campos obrigatórios
+                  </p>
+                  <button type="submit" class="btn-primario w-100" style="border-radius: 12px; justify-content: center;">
+                    <i class="fas fa-paper-plane me-2"></i>Enviar mensagem
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Informação de contacto -->
+          <div class="col-lg-5">
+            <div class="contacto-info">
+              <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--cor-primaria-escura);">
+                Informações de contacto
+              </h3>
+
+              <div class="contacto-info-item">
+                <div class="contacto-icone"><i class="fas fa-location-dot"></i></div>
+                <div>
+                  <div class="contacto-detalhe-titulo">Morada</div>
+                  <div class="contacto-detalhe-valor">Porto, Portugal</div>
+                </div>
+              </div>
+
+              <div class="contacto-info-item">
+                <div class="contacto-icone"><i class="fas fa-phone"></i></div>
+                <div>
+                  <div class="contacto-detalhe-titulo">Telefone</div>
+                  <div class="contacto-detalhe-valor">+351 222 000 100</div>
+                </div>
+              </div>
+
+              <div class="contacto-info-item">
+                <div class="contacto-icone"><i class="fas fa-envelope"></i></div>
+                <div>
+                  <div class="contacto-detalhe-titulo">Email</div>
+                  <div class="contacto-detalhe-valor">geral@medgest.pt</div>
+                </div>
+              </div>
+
+              <div class="contacto-info-item">
+                <div class="contacto-icone"><i class="fas fa-clock"></i></div>
+                <div>
+                  <div class="contacto-detalhe-titulo">Horário</div>
+                  <div class="contacto-detalhe-valor">2ª a 6ª Feira: 9h — 18h</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
 
 
     <!-- Rodapé -->
