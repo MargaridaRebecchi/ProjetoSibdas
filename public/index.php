@@ -1,10 +1,16 @@
+<?php
+require_once __DIR__ . '/../config/config.php';
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="pt">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedGest</title>
+    <title><?php echo APP_NAME; ?></title> 
     <!-- favicon -->
     <link rel="shortcut icon" href="../assets/images/logo.png" type="image/png">
 
@@ -62,8 +68,8 @@
                 </ul>
 
                 <!-- LOGIN -->
-                <a href="login_form.html" class="nav-link nav-link-medgest nav-btn-entrar">
-                    Área Restrita
+                <a href="#" class="nav-link nav-link-medgest nav-btn-entrar" data-bs-toggle="modal" data-bs-target="#loginModal">
+                  Área Restrita
                 </a>
 
             </div>
@@ -492,7 +498,41 @@
       </div>
     </div>
   </section>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content login-modal">
 
+      <div class="login-modal-header">
+        <h5><i class="fas fa-lock me-2"></i>Acesso Reservado</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="login-modal-body">
+        <h2 class="login-logo">Med<span>Gest</span></h2>
+        <p class="login-subtitulo">Entre com as suas credenciais para aceder à área reservada</p>
+
+        <form method="POST" action="">
+          <label>Email</label>
+          <div class="login-input">
+            <i class="fas fa-user"></i>
+            <input type="email" name="email" placeholder="Insira o seu email" required>
+          </div>
+
+          <label>Palavra-passe</label>
+          <div class="login-input">
+            <i class="fas fa-key"></i>
+            <input type="password" name="password" placeholder="Insira a sua palavra-passe" required>
+          </div>
+
+          <button type="submit" name="login_submit" class="login-btn">
+            <i class="fas fa-right-to-bracket me-2"></i>Entrar
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 
     <!-- Rodapé -->
     <footer class="footer">
