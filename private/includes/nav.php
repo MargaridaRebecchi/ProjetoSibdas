@@ -32,9 +32,9 @@
                     </li>
                     </ul>
 
-                <!-- LOGIN -->
-                <a href="#" class="nav-link nav-link-medgest nav-btn-entrar" data-bs-toggle="modal" data-bs-target="#loginModal">
-                  Área Restrita
+                <!-- LOGOUT-->
+                <a href="/SIBDAS_PROJETO_26_MEDGEST/public/index.php" class="nav-link nav-link-medgest nav-btn-entrar" data-bs-toggle="modal" data-bs-target="#loginModal">
+                  Sair
                 </a>
 
             </div>
