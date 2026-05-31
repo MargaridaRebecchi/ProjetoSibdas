@@ -1,5 +1,13 @@
 <?php include 'includes/header.php'; ?> 
 <?php include 'includes/nav.php'; ?> 
+<?php
+include 'includes/db.php';
+
+$sql = "SELECT codigo_interno, designacao, categoria, marca, estado_atual, criticidade 
+        FROM equipamentos
+        ORDER BY codigo_interno ASC";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -17,10 +25,10 @@
                 
             </div>
 
-            <button class="btn-primario">
+            <a href="adicionar_equipamento.php" class="btn-primario text-decoration-none">
                 <i class="fas fa-plus me-2"></i>
                 Novo equipamento
-            </button>
+</a>
 
         </section>
 
@@ -44,71 +52,65 @@
 
                     <tbody>
 
-                        <tr>
-                            <td>04.002</td>
-                            <td>Monitor multiparamétrico</td>
-                            <td>Monitorização</td>
-                            <td>Philips</td>
-                            <td>
-                                <span class="badge-medgest ativo">
-                                    Ativo
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-medgest suporte">
-                                    Suporte de vida
-                                </span>
-                            </td>
+<?php if ($result && $result->num_rows > 0): ?>
 
-                            <td>
-                                <button class="btn-acao ver">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+    <?php while ($row = $result->fetch_assoc()): ?>
 
-                                <button class="btn-acao editar">
-                                    <i class="fas fa-pen"></i>
-                                </button>
+        <?php
+            $estadoClasse = $row['estado_atual'];
+            $estadoTexto = str_replace('_', ' ', $row['estado_atual']);
 
-                                <button class="btn-acao apagar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
+            $categoriaTexto = str_replace('_', ' ', $row['categoria']);
+            $criticidadeTexto = str_replace('_', ' ', $row['criticidade']);
+            if ($criticidadeTexto == 'media') {
+    $criticidadeTexto = 'média';
+}
+        ?>
 
-                        <tr>
-                            <td>05.001</td>
-                            <td>Ventilador pulmonar</td>
-                            <td>Suporte de vida</td>
-                            <td>Dräger</td>
+        <tr>
+            <td><?= htmlspecialchars($row['codigo_interno']) ?></td>
+            <td><?= htmlspecialchars($row['designacao']) ?></td>
+            <td><?= ucfirst(htmlspecialchars($categoriaTexto)) ?></td>
+            <td><?= htmlspecialchars($row['marca']) ?></td>
 
-                            <td>
-                                <span class="badge-medgest ativo">
-                                    Ativo
-                                </span>
-                            </td>
+            <td>
+                <span class="badge-medgest <?= htmlspecialchars($estadoClasse) ?>">
+                    <?= ucfirst(htmlspecialchars($estadoTexto)) ?>
+                </span>
+            </td>
 
-                            <td>
-                                <span class="badge-medgest suporte">
-                                    Suporte de vida
-                                </span>
-                            </td>
+            <td>
+                <?= ucfirst(htmlspecialchars($criticidadeTexto)) ?>
+            </td>
 
-                            <td>
-                                <button class="btn-acao ver">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+            <td>
+                <button class="btn-acao ver">
+                    <i class="fas fa-eye"></i>
+                </button>
 
-                                <button class="btn-acao editar">
-                                    <i class="fas fa-pen"></i>
-                                </button>
+                <button class="btn-acao editar">
+                    <i class="fas fa-pen"></i>
+                </button>
 
-                                <button class="btn-acao apagar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
+                <button class="btn-acao apagar">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
 
-                    </tbody>
+    <?php endwhile; ?>
+
+<?php else: ?>
+
+    <tr>
+        <td colspan="7" class="text-center text-muted">
+            Não existem equipamentos registados.
+        </td>
+    </tr>
+
+<?php endif; ?>
+
+</tbody>
 
                 </table>
 

@@ -748,13 +748,68 @@ html, body {
     height: 100%;
     margin: 0;
 }
-
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
-
 main {
     flex: 1;
+}
+
+/* GESTAO DE EQUIPAMENTOS */
+.private-card{
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.private-card form label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.private-card form {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.badge-medgest {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 2px solid;
+    background-color: transparent;
+}
+
+/* ativo */
+.badge-medgest.ativo {
+    color: #198754;
+    border-color: #198754;
+    background-color: #eaf7ef;
+}
+
+/* inativo */
+.badge-medgest.inativo {
+    color: #dc3545;
+    border-color: #dc3545;
+    background-color: #fdeaea;
+}
+
+/* em manutenção */
+.badge-medgest.em_manutencao {
+    color: #d39e00;
+    border-color: #d39e00;
+    background-color: #fff8e1;
+}
+.private-header {
+    margin-top: 70px;
+    color: #073a52;
 }
