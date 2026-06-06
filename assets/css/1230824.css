@@ -813,3 +813,44 @@ main {
     margin-top: 70px;
     color: #073a52;
 }
+
+/* BOTÕES DE AÇÕES DA TABELA */
+
+.btn-acao {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1.5px solid;
+}
+
+/* VER */
+.btn-acao.ver {
+    color: #198754;
+    border-color: #198754;
+    background-color: #eaf7ef;
+}
+
+/* EDITAR */
+.btn-acao.editar {
+    color: #d39e00;
+    border-color: #d39e00;
+    background-color: #fff8e1;
+}
+
+/* APAGAR */
+.btn-acao.apagar {
+    color: #dc3545;
+    border-color: #dc3545;
+    background-color: #fdeaea;
+}
+
+.btn-acao:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}

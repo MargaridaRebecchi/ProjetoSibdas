@@ -1,13 +1,32 @@
-<?php include 'includes/header.php'; ?> 
-<?php include 'includes/nav.php'; ?> 
 <?php
 include 'includes/db.php';
 
-$sql = "SELECT codigo_interno, designacao, categoria, marca, estado_atual, criticidade 
+if (isset($_GET['apagar']) && is_numeric($_GET['apagar'])) {
+
+    $id = (int) $_GET['apagar'];
+
+    $sqlDelete = "DELETE FROM equipamentos WHERE id_equipamento = ?";
+    $stmtDelete = $conn->prepare($sqlDelete);
+    $stmtDelete->bind_param("i", $id);
+
+    if (!$stmtDelete->execute()) {
+        die("Erro ao apagar: " . $stmtDelete->error);
+    }
+
+    header("Location: gestao_equipamentos.php?apagado=1");
+    exit();
+}
+
+$sql = "SELECT id_equipamento, codigo_interno, designacao, categoria, marca, estado_atual, criticidade 
         FROM equipamentos
         ORDER BY codigo_interno ASC";
+
 $result = $conn->query($sql);
+
+include 'includes/header.php';
+include 'includes/nav.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -92,9 +111,16 @@ $result = $conn->query($sql);
                     <i class="fas fa-pen"></i>
                 </button>
 
-                <button class="btn-acao apagar">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <button 
+    type="button"
+    class="btn-acao apagar"
+    data-bs-toggle="modal"
+    data-bs-target="#modalApagarEquipamento"
+    data-id="<?= $row['id_equipamento'] ?>"
+    data-nome="<?= htmlspecialchars($row['designacao']) ?>"
+>
+    <i class="fas fa-trash"></i>
+</button>
             </td>
         </tr>
 
@@ -119,8 +145,91 @@ $result = $conn->query($sql);
         </section>
 
     </main>
+    
 
 </body>
 </html>
+<div class="modal fade" id="modalApagarEquipamento" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
+            <div class="modal-header">
+                <h5 class="modal-title">Remover equipamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Tem a certeza que quer remover o equipamento
+                <strong id="nomeEquipamentoApagar"></strong>?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <a href="#" id="confirmarApagarEquipamento" class="btn btn-danger">
+                    Remover
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalSucesso" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Sucesso</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+
+                <p class="mb-0">
+                    Equipamento removido com sucesso!
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+const modalApagar = document.getElementById('modalApagarEquipamento');
+
+modalApagar.addEventListener('show.bs.modal', function (event) {
+    const botao = event.relatedTarget;
+    const id = botao.getAttribute('data-id');
+    const nome = botao.getAttribute('data-nome');
+
+    document.getElementById('nomeEquipamentoApagar').textContent = nome;
+    document.getElementById('confirmarApagarEquipamento').href =
+        'gestao_equipamentos.php?apagar=' + id;
+});
+</script>
+<?php if (isset($_GET['apagado'])): ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    var modal = new bootstrap.Modal(
+        document.getElementById('modalSucesso')
+    );
+
+    modal.show();
+
+});
+</script>
+
+<?php endif; ?>
 <?php include 'includes/footer.php'; ?>
