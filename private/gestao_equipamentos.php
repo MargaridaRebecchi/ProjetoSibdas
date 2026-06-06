@@ -128,6 +128,9 @@ include 'includes/nav.php';
         <?php
             $estadoClasse = $row['estado_atual'];
             $estadoTexto = str_replace('_', ' ', $row['estado_atual']);
+            if ($estadoTexto == 'em manutencao') {
+            $estadoTexto = 'em manutenção';
+            }
 
         $categoriaTexto = str_replace('_', ' ', $row['categoria']);
         switch ($categoriaTexto) {
@@ -176,11 +179,42 @@ include 'includes/nav.php';
             <td>
                 <?= ucfirst(htmlspecialchars($criticidadeTexto)) ?>
             </td>
+
+
+
+
 <!-- BOTÃO VER EQUIPAMENTO -->
             <td>
-                <button class="btn-acao ver">
-                    <i class="fas fa-eye"></i>
-                </button>
+                <button 
+    type="button"
+    class="btn-acao ver"
+    data-bs-toggle="modal"
+    data-bs-target="#modalVerEquipamento"
+
+    data-codigo="<?= htmlspecialchars($row['codigo_interno']) ?>"
+    data-designacao="<?= htmlspecialchars($row['designacao']) ?>"
+    data-categoria="<?= htmlspecialchars($categoriaTexto) ?>"
+    data-marca="<?= htmlspecialchars($row['marca']) ?>"
+    data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
+    data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
+    data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
+
+    data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
+    data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
+    data-piso="<?= htmlspecialchars($row['piso']) ?>"
+    data-sala="<?= htmlspecialchars($row['sala']) ?>"
+
+    data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
+    data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
+    data-custo="<?= htmlspecialchars($row['custo_aquisicao']) ?>"
+    data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
+
+    data-estado="<?= htmlspecialchars($estadoTexto) ?>"
+    data-criticidade="<?= htmlspecialchars($criticidadeTexto) ?>"
+    data-registo="<?= htmlspecialchars($row['data_registo']) ?>"
+>
+    <i class="fas fa-eye"></i>
+</button>
 
 
 <!-- BOTÃO EDITAR EQUIPAMENTO -->
@@ -492,6 +526,72 @@ include 'includes/nav.php';
     </div>
 </div>
 
+
+<!-- MODAL VER EQUIPAMENTO - FICHA TÉCNICA -->
+<div class="modal fade" id="modalVerEquipamento" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content ficha-equipamento">
+
+            <div class="modal-header justify-content-center">
+                <div class="text-center">
+                    <h5 class="modal-title">Ficha Técnica do Equipamento</h5>
+                    <small class="text-muted" id="ver_subtitulo"></small>
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <h6 class="ficha-secao ficha-identificacao">Identificação</h6>
+
+                <div class="ficha-grid">
+                    <div><strong>Código interno</strong><span id="ver_codigo"></span></div>
+                    <div><strong>Designação</strong><span id="ver_designacao"></span></div>
+                    <div><strong>Categoria</strong><span id="ver_categoria"></span></div>
+                    <div><strong>Marca</strong><span id="ver_marca"></span></div>
+                    <div><strong>Modelo</strong><span id="ver_modelo"></span></div>
+                    <div><strong>Número de série</strong><span id="ver_serie"></span></div>
+                    <div><strong>Fabricante</strong><span id="ver_fabricante"></span></div>
+                </div>
+
+                <h6 class="ficha-secao ficha-localizacao">Localização</h6>
+
+                <div class="ficha-grid">
+                    <div><strong>Hospital</strong><span id="ver_hospital"></span></div>
+                    <div><strong>Edifício</strong><span id="ver_edificio"></span></div>
+                    <div><strong>Piso</strong><span id="ver_piso"></span></div>
+                    <div><strong>Sala</strong><span id="ver_sala"></span></div>
+                </div>
+
+                <h6 class="ficha-secao ficha-aquisicao">Aquisição</h6>
+
+                <div class="ficha-grid">
+                    <div><strong>Data de aquisição</strong><span id="ver_data_aquisicao"></span></div>
+                    <div><strong>Ano de fabrico</strong><span id="ver_ano_fabrico"></span></div>
+                    <div><strong>Custo de aquisição</strong><span id="ver_custo"></span></div>
+                    <div><strong>Tipo de entrada</strong><span id="ver_tipo_entrada"></span></div>
+                </div>
+
+                <h6 class="ficha-secao ficha-estado">Estado</h6>
+
+                <div class="ficha-grid">
+                    <div><strong>Estado atual</strong><span id="ver_estado"></span></div>
+                    <div><strong>Criticidade</strong><span id="ver_criticidade"></span></div>
+                    <div><strong>Data de registo</strong><span id="ver_data_registo"></span></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <?php if (isset($_GET['editado'])): ?>
 
 <script>
@@ -529,7 +629,6 @@ modalApagar.addEventListener('show.bs.modal', function (event) {
 });
 </script>
 <?php if (isset($_GET['apagado'])): ?>
-    
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -540,11 +639,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     modal.show();
 
+    window.history.replaceState(
+        {},
+        document.title,
+        'gestao_equipamentos.php'
+    );
+
 });
-
 </script>
-<?php endif; ?>
 
+<?php endif; ?>
 
 
 <script>
@@ -599,5 +703,89 @@ editAno.addEventListener('blur', function () {
 });
 </script>
 
+<script>
+const modalVer = document.getElementById('modalVerEquipamento');
+
+modalVer.addEventListener('show.bs.modal', function (event) {
+    const botao = event.relatedTarget;
+
+    function texto(id, valor) {
+        document.getElementById(id).textContent = valor || '—';
+    }
+
+    const codigo = botao.getAttribute('data-codigo');
+    const designacao = botao.getAttribute('data-designacao');
+
+    texto('ver_subtitulo', designacao + ' · Código ' + codigo);
+
+    texto('ver_codigo', codigo);
+    texto('ver_designacao', designacao);
+    texto('ver_categoria', capitalizar(botao.getAttribute('data-categoria')));
+    texto('ver_marca', botao.getAttribute('data-marca'));
+    texto('ver_modelo', botao.getAttribute('data-modelo'));
+    texto('ver_serie', botao.getAttribute('data-serie'));
+    texto('ver_fabricante', botao.getAttribute('data-fabricante'));
+
+    texto('ver_hospital', botao.getAttribute('data-hospital'));
+    texto('ver_edificio', botao.getAttribute('data-edificio'));
+    texto('ver_piso', botao.getAttribute('data-piso'));
+    texto('ver_sala', botao.getAttribute('data-sala'));
+
+    texto('ver_data_aquisicao', formatarData(botao.getAttribute('data-data-aquisicao')));
+    texto('ver_ano_fabrico', botao.getAttribute('data-ano-fabrico'));
+    texto('ver_custo', formatarEuro(botao.getAttribute('data-custo')));
+    texto('ver_tipo_entrada', formatarTexto(botao.getAttribute('data-tipo-entrada')));
+
+    texto('ver_estado', capitalizar(botao.getAttribute('data-estado')));
+    texto('ver_criticidade', capitalizar(botao.getAttribute('data-criticidade')));
+    texto('ver_data_registo', formatarDataHora(botao.getAttribute('data-registo')));
+});
+
+function capitalizar(texto) {
+    if (!texto) return '—';
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+function formatarTexto(texto) {
+    if (!texto) return '—';
+
+    texto = texto.replaceAll('_', ' ');
+
+    if (texto === 'doacao') texto = 'doação';
+    if (texto === 'emprestimo') texto = 'empréstimo';
+
+    return capitalizar(texto);
+}
+
+function formatarData(data) {
+    if (!data) return '—';
+
+    const partes = data.split('-');
+
+    if (partes.length !== 3) return data;
+
+    return partes[2] + '/' + partes[1] + '/' + partes[0];
+}
+
+function formatarDataHora(dataHora) {
+    if (!dataHora) return '—';
+
+    const partes = dataHora.split(' ');
+    const data = formatarData(partes[0]);
+
+    if (!partes[1]) return data;
+
+    return data + ' ' + partes[1].substring(0, 5);
+}
+
+function formatarEuro(valor) {
+    if (!valor) return '—';
+
+    return Number(valor).toLocaleString('pt-PT', {
+        style: 'currency',
+        currency: 'EUR'
+    });
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>

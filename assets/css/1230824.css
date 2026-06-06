@@ -758,6 +758,8 @@ main {
 }
 
 /* GESTAO DE EQUIPAMENTOS */
+
+
 .private-card{
     width: 100%;
     max-width: 1200px;
@@ -810,11 +812,11 @@ main {
     background-color: #fff8e1;
 }
 .private-header {
-    margin-top: 70px;
+    margin-top: 20px;
     color: #073a52;
 }
 
-/* BOTÕES DE AÇÕES DA TABELA */
+/* BOTÕES DE AÇÕES DA TABELA GESTAO DE EQUIPAMENTOS*/
 
 .btn-acao {
     width: 38px;
@@ -829,21 +831,21 @@ main {
     border: 1.5px solid;
 }
 
-/* VER */
+/* BOTÃO VER */
 .btn-acao.ver {
     color: #198754;
     border-color: #198754;
     background-color: #eaf7ef;
 }
 
-/* EDITAR */
+/* BOTÃO EDITAR */
 .btn-acao.editar {
     color: #d39e00;
     border-color: #d39e00;
     background-color: #fff8e1;
 }
 
-/* APAGAR */
+/* BOTÃO APAGAR */
 .btn-acao.apagar {
     color: #dc3545;
     border-color: #dc3545;
@@ -853,4 +855,103 @@ main {
 .btn-acao:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* FICHA TÉCNICA DO EQUIPAMENTO */
+
+.ficha-equipamento {
+    border-radius: 16px;
+}
+
+.ficha-equipamento .modal-title {
+    color: #073a52;
+    font-weight: 700;
+}
+
+.ficha-equipamento .modal-header {
+    background: #f5f8fa;
+    border-bottom: 1px solid #dde7ec;
+}
+
+.ficha-secao {
+    margin-top: 22px;
+    margin-bottom: 0;
+    color: #073a52;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 10px 10px 0 0;
+    border: 1px solid #dde7ec;
+    border-bottom: none;
+}
+
+.ficha-secao:first-child {
+    margin-top: 0;
+}
+
+.ficha-identificacao {
+    background-color: #eaf3f7;
+}
+
+.ficha-localizacao {
+    background-color: #eaf7ef;
+}
+
+.ficha-aquisicao {
+    background-color: #eaf3f7;
+}
+
+.ficha-estado {
+    background-color: #eaf3f7;
+}
+
+.ficha-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: 1px solid #dde7ec;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.ficha-grid div {
+    background: #ffffff;
+    border-bottom: 1px solid #e1e8ec;
+    padding: 11px 14px;
+}
+
+.ficha-grid div:nth-child(odd) {
+    border-right: 1px solid #e1e8ec;
+}
+
+.ficha-grid div:nth-last-child(-n+2) {
+    border-bottom: none;
+}
+
+.ficha-grid strong {
+    color: #073a52;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.ficha-grid strong::after {
+    content: ": ";
+}
+
+.ficha-grid span {
+    color: #1a2c35;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .ficha-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ficha-grid div:nth-child(odd) {
+        border-right: none;
+    }
+
+    .ficha-grid div {
+        border-bottom: 1px solid #e1e8ec;
+    }
 }
