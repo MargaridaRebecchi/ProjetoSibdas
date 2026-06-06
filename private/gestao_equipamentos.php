@@ -79,7 +79,32 @@ include 'includes/nav.php';
             $estadoClasse = $row['estado_atual'];
             $estadoTexto = str_replace('_', ' ', $row['estado_atual']);
 
-            $categoriaTexto = str_replace('_', ' ', $row['categoria']);
+        $categoriaTexto = str_replace('_', ' ', $row['categoria']);
+        switch ($categoriaTexto) {
+    case 'monitorizacao':
+        $categoriaTexto = 'monitorização';
+        break;
+
+    case 'suporte vida':
+        $categoriaTexto = 'suporte de vida';
+        break;
+
+    case 'diagnostico':
+        $categoriaTexto = 'diagnóstico';
+        break;
+
+    case 'laboratorio':
+        $categoriaTexto = 'laboratório';
+        break;
+
+    case 'reabilitacao':
+        $categoriaTexto = 'reabilitação';
+        break;
+
+    case 'esterilizacao':
+        $categoriaTexto = 'esterilização';
+        break;
+}
             $criticidadeTexto = str_replace('_', ' ', $row['criticidade']);
             if ($criticidadeTexto == 'media') {
     $criticidadeTexto = 'média';

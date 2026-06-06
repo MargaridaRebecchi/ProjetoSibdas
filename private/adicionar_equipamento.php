@@ -1,5 +1,3 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/nav.php'; ?>
 <?php include 'includes/db.php'; ?>
 
 
@@ -84,18 +82,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_POST['criticidade']
             );
 
-            if ($stmt->execute()) {
-                header("Location: gestao_equipamentos.php");
+            try {
+                $stmt->execute();
+
+                header("Location: adicionar_equipamento.php?sucesso=1");
                 exit();
-            } else {
-                $erros[] = "Erro ao adicionar equipamento: " . $stmt->error;
+            } catch (mysqli_sql_exception $e) {
+
+                if ($e->getCode() == 1062) {
+                    $erroModal = "Já existe um equipamento com esse código interno ou número de série.";
+                } else {
+                    $erroModal = "Erro ao adicionar equipamento: " . $e->getMessage();
+                }
             }
-        } else {
-            $erros[] = "Erro ao adicionar localização: " . $stmtLoc->error;
         }
     }
 }
 ?>
+<?php include 'includes/header.php'; ?>
+<?php include 'includes/nav.php'; ?>
 
 <main class="private-main">
 
@@ -268,97 +273,184 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="mt-3 d-flex align-items-center">
 
-    <button type="submit" class="btn-primario">
-        Adicionar equipamento
-    </button>
+                <button type="submit" class="btn-primario">
+                    Adicionar equipamento
+                </button>
 
-    <a href="gestao_equipamentos.php" class="btn btn-secondary ms-2">
-        Cancelar
-    </a>
+                <a href="gestao_equipamentos.php" class="btn btn-secondary ms-2">
+                    Cancelar
+                </a>
 
-    <button type="button"
-            class="btn btn-sm btn-outline-secondary ms-auto"
-            onclick="preencherTeste()">
-        Preencher teste
-    </button>
+                <button type="button"
+                    class="btn btn-sm btn-outline-secondary ms-auto"
+                    onclick="preencherTeste()">
+                    Preencher teste
+                </button>
 
-</div>
-            
-                
+            </div>
+
+
         </form>
 
     </section>
 
 </main>
+<div class="modal fade" id="modalErroAdicionar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-danger text-center">
+                    Erro ao adicionar equipamento
+                </h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-times-circle fa-3x text-danger mb-3"></i>
+
+                <p class="mb-0">
+                    <?= htmlspecialchars($erroModal ?? '') ?>
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSucessoAdicionar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-success text-center">
+                    Equipamento adicionado
+                </h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+
+                <p class="mb-0">
+                    Equipamento adicionado com sucesso!
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <a href="gestao_equipamentos.php"
+                    class="btn btn-success">
+                    Fechar
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<?php if (isset($_GET['sucesso'])): ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const modalSucesso = new bootstrap.Modal(
+                document.getElementById('modalSucessoAdicionar')
+            );
+
+            modalSucesso.show();
+
+        });
+    </script>
+
+<?php endif; ?>
+
+<?php if (isset($erroModal)): ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalErro = new bootstrap.Modal(
+                document.getElementById('modalErroAdicionar')
+            );
+
+            modalErro.show();
+        });
+    </script>
+
+<?php endif; ?>
 
 <script>
+    document.querySelectorAll('input, select').forEach(campo => {
 
-document.querySelectorAll('input, select').forEach(campo => {
+        campo.addEventListener('blur', function() {
 
-    campo.addEventListener('blur', function () {
+            this.classList.remove('is-valid');
+            this.classList.remove('is-invalid');
 
-        this.classList.remove('is-valid');
-        this.classList.remove('is-invalid');
+            // Ano de fabrico
+            if (this.name === 'ano_fabrico') {
 
-        // Ano de fabrico
-        if (this.name === 'ano_fabrico') {
+                const ano = parseInt(this.value);
 
-            const ano = parseInt(this.value);
-
-            if (
-                !/^[0-9]{4}$/.test(this.value) ||
-                ano > 2026
-            ) {
-                this.setCustomValidity('erro');
-            } else {
-                this.setCustomValidity('');
+                if (
+                    !/^[0-9]{4}$/.test(this.value) ||
+                    ano > 2026
+                ) {
+                    this.setCustomValidity('erro');
+                } else {
+                    this.setCustomValidity('');
+                }
             }
-        }
 
-        // Código interno
-        if (this.name === 'codigo_interno') {
+            // Código interno
+            if (this.name === 'codigo_interno') {
 
-            if (!/^[0-9]{2}\.[0-9]{3}$/.test(this.value)) {
-                this.setCustomValidity('erro');
-            } else {
-                this.setCustomValidity('');
+                if (!/^[0-9]{2}\.[0-9]{3}$/.test(this.value)) {
+                    this.setCustomValidity('erro');
+                } else {
+                    this.setCustomValidity('');
+                }
             }
-        }
 
-        if (!this.checkValidity()) {
-            this.classList.add('is-invalid');
-        } else {
-            this.classList.add('is-valid');
-        }
+            if (!this.checkValidity()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.add('is-valid');
+            }
+
+        });
 
     });
 
-});
-function preencherTeste() {
+    function preencherTeste() {
 
-    document.querySelector('[name="codigo_interno"]').value = '99.999';
-    document.querySelector('[name="designacao"]').value = 'Equipamento de Teste';
-    document.querySelector('[name="categoria"]').value = 'monitorizacao';
-    document.querySelector('[name="marca"]').value = 'Philips';
-    document.querySelector('[name="modelo"]').value = 'Modelo Teste';
-    document.querySelector('[name="numero_serie"]').value = 'TESTE-' + Date.now();
-    document.querySelector('[name="fabricante"]').value = 'Philips';
+        document.querySelector('[name="codigo_interno"]').value = '99.999';
+        document.querySelector('[name="designacao"]').value = 'Equipamento de Teste';
+        document.querySelector('[name="categoria"]').value = 'monitorizacao';
+        document.querySelector('[name="marca"]').value = 'Philips';
+        document.querySelector('[name="modelo"]').value = 'Modelo Teste';
+        document.querySelector('[name="numero_serie"]').value = 'TESTE-' + Date.now();
+        document.querySelector('[name="fabricante"]').value = 'Philips';
 
-    document.querySelector('[name="hospital"]').value = 'Hospital São João';
-    document.querySelector('[name="edificio"]').value = 'Edifício Principal';
-    document.querySelector('[name="piso"]').value = '2';
-    document.querySelector('[name="sala"]').value = '201';
+        document.querySelector('[name="hospital"]').value = 'Hospital São João';
+        document.querySelector('[name="edificio"]').value = 'Edifício Principal';
+        document.querySelector('[name="piso"]').value = '2';
+        document.querySelector('[name="sala"]').value = '201';
 
-    document.querySelector('[name="data_aquisicao"]').value = '2024-01-15';
-    document.querySelector('[name="ano_fabrico"]').value = '2023';
-    document.querySelector('[name="custo_aquisicao"]').value = '1500.00';
+        document.querySelector('[name="data_aquisicao"]').value = '2024-01-15';
+        document.querySelector('[name="ano_fabrico"]').value = '2023';
+        document.querySelector('[name="custo_aquisicao"]').value = '1500.00';
 
-    document.querySelector('[name="tipo_entrada"]').value = 'compra';
-    document.querySelector('[name="estado_atual"]').value = 'ativo';
-    document.querySelector('[name="criticidade"]').value = 'media';
-}
-
+        document.querySelector('[name="tipo_entrada"]').value = 'compra';
+        document.querySelector('[name="estado_atual"]').value = 'ativo';
+        document.querySelector('[name="criticidade"]').value = 'media';
+    }
 </script>
-</script>
+
 
 <?php include 'includes/footer.php'; ?>
