@@ -266,16 +266,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
-            <div class="mt-3 d-flex gap-2">
-                <button type="submit" class="btn-primario">
-                    Adicionar equipamento
-                </button>
+            <div class="mt-3 d-flex align-items-center">
 
-                <a href="gestao_equipamentos.php" class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </div>
+    <button type="submit" class="btn-primario">
+        Adicionar equipamento
+    </button>
 
+    <a href="gestao_equipamentos.php" class="btn btn-secondary ms-2">
+        Cancelar
+    </a>
+
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary ms-auto"
+            onclick="preencherTeste()">
+        Preencher teste
+    </button>
+
+</div>
+            
+                
         </form>
 
     </section>
@@ -325,6 +334,29 @@ document.querySelectorAll('input, select').forEach(campo => {
     });
 
 });
+function preencherTeste() {
+
+    document.querySelector('[name="codigo_interno"]').value = '99.999';
+    document.querySelector('[name="designacao"]').value = 'Equipamento de Teste';
+    document.querySelector('[name="categoria"]').value = 'monitorizacao';
+    document.querySelector('[name="marca"]').value = 'Philips';
+    document.querySelector('[name="modelo"]').value = 'Modelo Teste';
+    document.querySelector('[name="numero_serie"]').value = 'TESTE-' + Date.now();
+    document.querySelector('[name="fabricante"]').value = 'Philips';
+
+    document.querySelector('[name="hospital"]').value = 'Hospital São João';
+    document.querySelector('[name="edificio"]').value = 'Edifício Principal';
+    document.querySelector('[name="piso"]').value = '2';
+    document.querySelector('[name="sala"]').value = '201';
+
+    document.querySelector('[name="data_aquisicao"]').value = '2024-01-15';
+    document.querySelector('[name="ano_fabrico"]').value = '2023';
+    document.querySelector('[name="custo_aquisicao"]').value = '1500.00';
+
+    document.querySelector('[name="tipo_entrada"]').value = 'compra';
+    document.querySelector('[name="estado_atual"]').value = 'ativo';
+    document.querySelector('[name="criticidade"]').value = 'media';
+}
 
 </script>
 </script>
