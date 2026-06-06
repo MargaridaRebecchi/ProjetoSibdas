@@ -1,6 +1,24 @@
 <?php
 include 'includes/db.php';
 
+$limite = 10;
+
+$pagina = isset($_GET['pagina']) && is_numeric($_GET['pagina'])
+    ? (int) $_GET['pagina']
+    : 1;
+
+if ($pagina < 1) {
+    $pagina = 1;
+}
+
+$offset = ($pagina - 1) * $limite;
+
+$sqlTotal = "SELECT COUNT(*) AS total FROM equipamentos";
+$resultTotal = $conn->query($sqlTotal);
+$totalEquipamentos = $resultTotal->fetch_assoc()['total'];
+
+$totalPaginas = ceil($totalEquipamentos / $limite);
+
 if (isset($_GET['apagar']) && is_numeric($_GET['apagar'])) {
 
     $id = (int) $_GET['apagar'];
@@ -69,10 +87,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_equipamento']))
 $sql = "SELECT e.*, l.hospital, l.edificio, l.piso, l.sala
         FROM equipamentos e
         LEFT JOIN localizacoes_ l ON e.id_localizacao = l.id_localizacao
-        ORDER BY e.codigo_interno ASC";
+        ORDER BY e.codigo_interno ASC
+        LIMIT $limite OFFSET $offset";
 
 $result = $conn->query($sql);
-
 include 'includes/header.php';
 include 'includes/nav.php';
 ?>
@@ -277,6 +295,29 @@ include 'includes/nav.php';
 </tbody>
 
                 </table>
+                <?php if ($totalPaginas > 1): ?>
+    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+
+        <?php if ($pagina > 1): ?>
+            <a href="gestao_equipamentos.php?pagina=<?= $pagina - 1 ?>"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        <?php endif; ?>
+
+        <span class="text-muted">
+            Página <?= $pagina ?> de <?= $totalPaginas ?>
+        </span>
+
+        <?php if ($pagina < $totalPaginas): ?>
+            <a href="gestao_equipamentos.php?pagina=<?= $pagina + 1 ?>"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        <?php endif; ?>
+
+    </div>
+<?php endif; ?>
 
             </div>
 
