@@ -1,7 +1,37 @@
 <?php
 include 'includes/db.php';
 
+/*BARRA DE PESQUISA */
+$pesquisa = $_GET['pesquisa'] ?? '';
+$whereSQL = '';
+
+if ($pesquisa != '') {
+
+    $pesquisaNormal = trim(mb_strtolower($pesquisa));
+
+    $pesquisaEspecial = str_replace(
+        ['ã','á','à','â','é','ê','í','ó','ô','õ','ú','ç',' '],
+        ['a','a','a','a','e','e','i','o','o','o','u','c','_'],
+        $pesquisaNormal
+    );
+
+    $pesquisaNormalSQL = $conn->real_escape_string($pesquisaNormal);
+    $pesquisaEspecialSQL = $conn->real_escape_string($pesquisaEspecial);
+
+    $whereSQL = "WHERE
+        LOWER(e.codigo_interno) LIKE '%$pesquisaNormalSQL%'
+        OR LOWER(e.designacao) LIKE '%$pesquisaNormalSQL%'
+        OR LOWER(e.categoria) LIKE '%$pesquisaNormalSQL%'
+        OR LOWER(e.marca) LIKE '%$pesquisaNormalSQL%'
+        OR LOWER(e.estado_atual) = '$pesquisaEspecialSQL'
+        OR LOWER(e.criticidade) LIKE '%$pesquisaEspecialSQL%'
+    ";
+}
+//MOSTRAR 10 EQ DE CADA VEZ NA TABELA
 $limite = 10;
+$queryPesquisa = http_build_query([
+    'pesquisa' => $pesquisa
+]);
 
 $pagina = isset($_GET['pagina']) && is_numeric($_GET['pagina'])
     ? (int) $_GET['pagina']
@@ -13,7 +43,9 @@ if ($pagina < 1) {
 
 $offset = ($pagina - 1) * $limite;
 
-$sqlTotal = "SELECT COUNT(*) AS total FROM equipamentos";
+$sqlTotal = "SELECT COUNT(*) AS total 
+             FROM equipamentos e
+             $whereSQL";
 $resultTotal = $conn->query($sqlTotal);
 $totalEquipamentos = $resultTotal->fetch_assoc()['total'];
 
@@ -87,6 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_equipamento']))
 $sql = "SELECT e.*, l.hospital, l.edificio, l.piso, l.sala
         FROM equipamentos e
         LEFT JOIN localizacoes_ l ON e.id_localizacao = l.id_localizacao
+        $whereSQL
         ORDER BY e.codigo_interno ASC
         LIMIT $limite OFFSET $offset";
 
@@ -107,20 +140,37 @@ include 'includes/nav.php';
         <section class="private-header">
 
             <div>
-                
+
                 <h1>Gestão de Equipamentos</h1>
-                
+
             </div>
 
             <a href="adicionar_equipamento.php" class="btn-primario text-decoration-none">
                 <i class="fas fa-plus me-2"></i>
                 Novo equipamento
-</a>
+            </a>
 
         </section>
 
         <section class="private-card">
 
+
+            <!-- BARRA DE PESQUISA -->
+            <div class="pesquisa-wrapper">
+                <form method="GET" class="pesquisa-equipamentos">
+                    <input
+                        type="text"
+                        name="pesquisa"
+                        class="form-control form-control-sm"
+                        placeholder="Pesquisar..."
+                        value="<?= htmlspecialchars($pesquisa) ?>">
+
+                    <a href="gestao_equipamentos.php"
+                        class="btn btn-sm btn-outline-secondary">
+                        Limpar
+                    </a>
+                </form>
+            </div>
             <div class="table-responsive">
 
                 <table class="table tabela-medgest align-middle">
@@ -139,194 +189,194 @@ include 'includes/nav.php';
 
                     <tbody>
 
-<?php if ($result && $result->num_rows > 0): ?>
+                        <?php if ($result && $result->num_rows > 0): ?>
 
-    <?php while ($row = $result->fetch_assoc()): ?>
+                            <?php while ($row = $result->fetch_assoc()): ?>
 
-        <?php
-            $estadoClasse = $row['estado_atual'];
-            $estadoTexto = str_replace('_', ' ', $row['estado_atual']);
-            if ($estadoTexto == 'em manutencao') {
-            $estadoTexto = 'em manutenção';
-            }
+                                <?php
+                                $estadoClasse = $row['estado_atual'];
+                                $estadoTexto = str_replace('_', ' ', $row['estado_atual']);
+                                if ($estadoTexto == 'em manutencao') {
+                                    $estadoTexto = 'em manutenção';
+                                }
 
-        $categoriaTexto = str_replace('_', ' ', $row['categoria']);
-        switch ($categoriaTexto) {
-    case 'monitorizacao':
-        $categoriaTexto = 'monitorização';
-        break;
+                                $categoriaTexto = str_replace('_', ' ', $row['categoria']);
+                                switch ($categoriaTexto) {
+                                    case 'monitorizacao':
+                                        $categoriaTexto = 'monitorização';
+                                        break;
 
-    case 'suporte vida':
-        $categoriaTexto = 'suporte de vida';
-        break;
+                                    case 'suporte vida':
+                                        $categoriaTexto = 'suporte de vida';
+                                        break;
 
-    case 'diagnostico':
-        $categoriaTexto = 'diagnóstico';
-        break;
+                                    case 'diagnostico':
+                                        $categoriaTexto = 'diagnóstico';
+                                        break;
 
-    case 'laboratorio':
-        $categoriaTexto = 'laboratório';
-        break;
+                                    case 'laboratorio':
+                                        $categoriaTexto = 'laboratório';
+                                        break;
 
-    case 'reabilitacao':
-        $categoriaTexto = 'reabilitação';
-        break;
+                                    case 'reabilitacao':
+                                        $categoriaTexto = 'reabilitação';
+                                        break;
 
-    case 'esterilizacao':
-        $categoriaTexto = 'esterilização';
-        break;
-}
-            $criticidadeTexto = str_replace('_', ' ', $row['criticidade']);
-            if ($criticidadeTexto == 'media') {
-    $criticidadeTexto = 'média';
-}
-        ?>
+                                    case 'esterilizacao':
+                                        $categoriaTexto = 'esterilização';
+                                        break;
+                                }
+                                $criticidadeTexto = str_replace('_', ' ', $row['criticidade']);
+                                if ($criticidadeTexto == 'media') {
+                                    $criticidadeTexto = 'média';
+                                }
+                                ?>
 
-        <tr>
-            <td><?= htmlspecialchars($row['codigo_interno']) ?></td>
-            <td><?= htmlspecialchars($row['designacao']) ?></td>
-            <td><?= ucfirst(htmlspecialchars($categoriaTexto)) ?></td>
-            <td><?= htmlspecialchars($row['marca']) ?></td>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['codigo_interno']) ?></td>
+                                    <td><?= htmlspecialchars($row['designacao']) ?></td>
+                                    <td><?= ucfirst(htmlspecialchars($categoriaTexto)) ?></td>
+                                    <td><?= htmlspecialchars($row['marca']) ?></td>
 
-            <td>
-                <span class="badge-medgest <?= htmlspecialchars($estadoClasse) ?>">
-                    <?= ucfirst(htmlspecialchars($estadoTexto)) ?>
-                </span>
-            </td>
+                                    <td>
+                                        <span class="badge-medgest <?= htmlspecialchars($estadoClasse) ?>">
+                                            <?= ucfirst(htmlspecialchars($estadoTexto)) ?>
+                                        </span>
+                                    </td>
 
-            <td>
-                <?= ucfirst(htmlspecialchars($criticidadeTexto)) ?>
-            </td>
-
-
+                                    <td>
+                                        <?= ucfirst(htmlspecialchars($criticidadeTexto)) ?>
+                                    </td>
 
 
-<!-- BOTÃO VER EQUIPAMENTO -->
-            <td>
-                <button 
-    type="button"
-    class="btn-acao ver"
-    data-bs-toggle="modal"
-    data-bs-target="#modalVerEquipamento"
-
-    data-codigo="<?= htmlspecialchars($row['codigo_interno']) ?>"
-    data-designacao="<?= htmlspecialchars($row['designacao']) ?>"
-    data-categoria="<?= htmlspecialchars($categoriaTexto) ?>"
-    data-marca="<?= htmlspecialchars($row['marca']) ?>"
-    data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
-    data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
-    data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
-
-    data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
-    data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
-    data-piso="<?= htmlspecialchars($row['piso']) ?>"
-    data-sala="<?= htmlspecialchars($row['sala']) ?>"
-
-    data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
-    data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
-    data-custo="<?= htmlspecialchars($row['custo_aquisicao']) ?>"
-    data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
-
-    data-estado="<?= htmlspecialchars($estadoTexto) ?>"
-    data-criticidade="<?= htmlspecialchars($criticidadeTexto) ?>"
-    data-registo="<?= htmlspecialchars($row['data_registo']) ?>"
->
-    <i class="fas fa-eye"></i>
-</button>
 
 
-<!-- BOTÃO EDITAR EQUIPAMENTO -->
-                <button 
-    type="button"
-    class="btn-acao editar"
-    data-bs-toggle="modal"
-    data-bs-target="#modalEditarEquipamento"
+                                    <!-- BOTÃO VER EQUIPAMENTO -->
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="btn-acao ver"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalVerEquipamento"
 
-    data-id="<?= $row['id_equipamento'] ?>"
-    data-id-localizacao="<?= $row['id_localizacao'] ?>"
-    data-codigo="<?= htmlspecialchars($row['codigo_interno']) ?>"
-    data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
-    data-designacao="<?= htmlspecialchars($row['designacao']) ?>"
-    data-categoria="<?= htmlspecialchars($row['categoria']) ?>"
-    data-marca="<?= htmlspecialchars($row['marca']) ?>"
-    data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
-    data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
-    data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
-    data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
-    data-piso="<?= htmlspecialchars($row['piso']) ?>"
-    data-sala="<?= htmlspecialchars($row['sala']) ?>"
-    data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
-    data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
-    data-custo="<?= htmlspecialchars($row['custo_aquisicao']) ?>"
-    data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
-    data-estado="<?= htmlspecialchars($row['estado_atual']) ?>"
-    data-criticidade="<?= htmlspecialchars($row['criticidade']) ?>"
->
-    <i class="fas fa-pen"></i>
-</button>
+                                            data-codigo="<?= htmlspecialchars($row['codigo_interno']) ?>"
+                                            data-designacao="<?= htmlspecialchars($row['designacao']) ?>"
+                                            data-categoria="<?= htmlspecialchars($categoriaTexto) ?>"
+                                            data-marca="<?= htmlspecialchars($row['marca']) ?>"
+                                            data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
+                                            data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
+                                            data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
+
+                                            data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
+                                            data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
+                                            data-piso="<?= htmlspecialchars($row['piso']) ?>"
+                                            data-sala="<?= htmlspecialchars($row['sala']) ?>"
+
+                                            data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
+                                            data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
+                                            data-custo="<?= htmlspecialchars($row['custo_aquisicao']) ?>"
+                                            data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
+
+                                            data-estado="<?= htmlspecialchars($estadoTexto) ?>"
+                                            data-criticidade="<?= htmlspecialchars($criticidadeTexto) ?>"
+                                            data-registo="<?= htmlspecialchars($row['data_registo']) ?>">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
 
 
-<!--BOTÃO APAGAR EQUIPAMENTO -->
-                <button 
-    type="button"
-    class="btn-acao apagar"
-    data-bs-toggle="modal"
-    data-bs-target="#modalApagarEquipamento"
-    data-id="<?= $row['id_equipamento'] ?>"
-    data-nome="<?= htmlspecialchars($row['designacao']) ?>"
->
-    <i class="fas fa-trash"></i>
-</button>
-            </td>
-        </tr>
+                                        <!-- BOTÃO EDITAR EQUIPAMENTO -->
+                                        <button
+                                            type="button"
+                                            class="btn-acao editar"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarEquipamento"
 
-    <?php endwhile; ?>
+                                            data-id="<?= $row['id_equipamento'] ?>"
+                                            data-id-localizacao="<?= $row['id_localizacao'] ?>"
+                                            data-codigo="<?= htmlspecialchars($row['codigo_interno']) ?>"
+                                            data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
+                                            data-designacao="<?= htmlspecialchars($row['designacao']) ?>"
+                                            data-categoria="<?= htmlspecialchars($row['categoria']) ?>"
+                                            data-marca="<?= htmlspecialchars($row['marca']) ?>"
+                                            data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
+                                            data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
+                                            data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
+                                            data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
+                                            data-piso="<?= htmlspecialchars($row['piso']) ?>"
+                                            data-sala="<?= htmlspecialchars($row['sala']) ?>"
+                                            data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
+                                            data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
+                                            data-custo="<?= htmlspecialchars($row['custo_aquisicao']) ?>"
+                                            data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
+                                            data-estado="<?= htmlspecialchars($row['estado_atual']) ?>"
+                                            data-criticidade="<?= htmlspecialchars($row['criticidade']) ?>">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
 
-<?php else: ?>
 
-    <tr>
-        <td colspan="7" class="text-center text-muted">
-            Não existem equipamentos registados.
-        </td>
-    </tr>
+                                        <!--BOTÃO APAGAR EQUIPAMENTO -->
+                                        <button
+                                            type="button"
+                                            class="btn-acao apagar"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalApagarEquipamento"
+                                            data-id="<?= $row['id_equipamento'] ?>"
+                                            data-nome="<?= htmlspecialchars($row['designacao']) ?>">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
 
-<?php endif; ?>
+                            <?php endwhile; ?>
 
-</tbody>
+                        <?php else: ?>
+
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">
+                                    Não existem equipamentos registados.
+                                </td>
+                            </tr>
+
+                        <?php endif; ?>
+
+                    </tbody>
 
                 </table>
+
+                <!-- MOSTRAR 1O EQ DE CADA VEZ NA TABELA -->
                 <?php if ($totalPaginas > 1): ?>
-    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+                    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
 
-        <?php if ($pagina > 1): ?>
-            <a href="gestao_equipamentos.php?pagina=<?= $pagina - 1 ?>"
-               class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-        <?php endif; ?>
+                        <?php if ($pagina > 1): ?>
+                            <a href="gestao_equipamentos.php?pagina=<?= $pagina - 1 ?>&<?= $queryPesquisa ?>"
+                                class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        <?php endif; ?>
 
-        <span class="text-muted">
-            Página <?= $pagina ?> de <?= $totalPaginas ?>
-        </span>
+                        <span class="text-muted">
+                            Página <?= $pagina ?> de <?= $totalPaginas ?>
+                        </span>
 
-        <?php if ($pagina < $totalPaginas): ?>
-            <a href="gestao_equipamentos.php?pagina=<?= $pagina + 1 ?>"
-               class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-chevron-right"></i>
-            </a>
-        <?php endif; ?>
+                        <?php if ($pagina < $totalPaginas): ?>
+                            <a href="gestao_equipamentos.php?pagina=<?= $pagina + 1 ?>&<?= $queryPesquisa ?>"
+                                class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php endif; ?>
 
-    </div>
-<?php endif; ?>
+                    </div>
+                <?php endif; ?>
 
             </div>
 
         </section>
 
     </main>
-    
+
 
 </body>
+
 </html>
 
 <!--MODAL APAGAR EQUIPAMENTO -->
@@ -377,8 +427,8 @@ include 'includes/nav.php';
 
             <div class="modal-footer justify-content-center">
                 <button type="button"
-                        class="btn btn-success"
-                        data-bs-dismiss="modal">
+                    class="btn btn-success"
+                    data-bs-dismiss="modal">
                     Fechar
                 </button>
             </div>
@@ -476,11 +526,11 @@ include 'includes/nav.php';
 
                         <div class="col-md-6 mb-3">
                             <label>Ano de fabrico</label>
-                            <input type="text" name="ano_fabrico" id="edit_ano_fabrico" class="form-control form-control-sm" pattern="[0-9]{4}" maxlength="4"  min="1900"
-       max="2026"required>
-       <div class="invalid-feedback">
-    O ano de fabrico não pode ser superior a 2026.
-</div>
+                            <input type="text" name="ano_fabrico" id="edit_ano_fabrico" class="form-control form-control-sm" pattern="[0-9]{4}" maxlength="4" min="1900"
+                                max="2026" required>
+                            <div class="invalid-feedback">
+                                O ano de fabrico não pode ser superior a 2026.
+                            </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -529,7 +579,7 @@ include 'includes/nav.php';
                         Cancelar
                     </button>
 
-                    
+
                 </div>
 
             </form>
@@ -635,198 +685,196 @@ include 'includes/nav.php';
 
 <?php if (isset($_GET['editado'])): ?>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    const modal = new bootstrap.Modal(
-        document.getElementById('modalEditadoSucesso')
-    );
+            const modal = new bootstrap.Modal(
+                document.getElementById('modalEditadoSucesso')
+            );
 
-    modal.show();
+            modal.show();
 
-    // Remove ?editado=1 do URL
-    window.history.replaceState(
-        {},
-        document.title,
-        'gestao_equipamentos.php'
-    );
+            // Remove ?editado=1 do URL
+            window.history.replaceState({},
+                document.title,
+                'gestao_equipamentos.php'
+            );
 
-});
-</script>
+        });
+    </script>
 
 <?php endif; ?>
 
 <script>
-const modalApagar = document.getElementById('modalApagarEquipamento');
+    const modalApagar = document.getElementById('modalApagarEquipamento');
 
-modalApagar.addEventListener('show.bs.modal', function (event) {
-    const botao = event.relatedTarget;
-    const id = botao.getAttribute('data-id');
-    const nome = botao.getAttribute('data-nome');
+    modalApagar.addEventListener('show.bs.modal', function(event) {
+        const botao = event.relatedTarget;
+        const id = botao.getAttribute('data-id');
+        const nome = botao.getAttribute('data-nome');
 
-    document.getElementById('nomeEquipamentoApagar').textContent = nome;
-    document.getElementById('confirmarApagarEquipamento').href =
-        'gestao_equipamentos.php?apagar=' + id;
-});
+        document.getElementById('nomeEquipamentoApagar').textContent = nome;
+        document.getElementById('confirmarApagarEquipamento').href =
+            'gestao_equipamentos.php?apagar=' + id;
+    });
 </script>
 <?php if (isset($_GET['apagado'])): ?>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    var modal = new bootstrap.Modal(
-        document.getElementById('modalSucesso')
-    );
+            var modal = new bootstrap.Modal(
+                document.getElementById('modalSucesso')
+            );
 
-    modal.show();
+            modal.show();
 
-    window.history.replaceState(
-        {},
-        document.title,
-        'gestao_equipamentos.php'
-    );
+            window.history.replaceState({},
+                document.title,
+                'gestao_equipamentos.php'
+            );
 
-});
-</script>
+        });
+    </script>
 
 <?php endif; ?>
 
 
 <script>
-const modalEditar = document.getElementById('modalEditarEquipamento');
+    const modalEditar = document.getElementById('modalEditarEquipamento');
 
-modalEditar.addEventListener('show.bs.modal', function (event) {
-    const botao = event.relatedTarget;
+    modalEditar.addEventListener('show.bs.modal', function(event) {
+        const botao = event.relatedTarget;
 
-    document.getElementById('edit_id_equipamento').value = botao.getAttribute('data-id');
-    document.getElementById('edit_id_localizacao').value = botao.getAttribute('data-id-localizacao');
+        document.getElementById('edit_id_equipamento').value = botao.getAttribute('data-id');
+        document.getElementById('edit_id_localizacao').value = botao.getAttribute('data-id-localizacao');
 
-    document.getElementById('edit_codigo').value = botao.getAttribute('data-codigo');
-    document.getElementById('edit_serie').value = botao.getAttribute('data-serie');
-    document.getElementById('edit_designacao').value = botao.getAttribute('data-designacao');
-    document.getElementById('edit_categoria').value = botao.getAttribute('data-categoria');
-    document.getElementById('edit_marca').value = botao.getAttribute('data-marca');
-    document.getElementById('edit_modelo').value = botao.getAttribute('data-modelo');
-    document.getElementById('edit_fabricante').value = botao.getAttribute('data-fabricante');
+        document.getElementById('edit_codigo').value = botao.getAttribute('data-codigo');
+        document.getElementById('edit_serie').value = botao.getAttribute('data-serie');
+        document.getElementById('edit_designacao').value = botao.getAttribute('data-designacao');
+        document.getElementById('edit_categoria').value = botao.getAttribute('data-categoria');
+        document.getElementById('edit_marca').value = botao.getAttribute('data-marca');
+        document.getElementById('edit_modelo').value = botao.getAttribute('data-modelo');
+        document.getElementById('edit_fabricante').value = botao.getAttribute('data-fabricante');
 
-    document.getElementById('edit_hospital').value = botao.getAttribute('data-hospital');
-    document.getElementById('edit_edificio').value = botao.getAttribute('data-edificio');
-    document.getElementById('edit_piso').value = botao.getAttribute('data-piso');
-    document.getElementById('edit_sala').value = botao.getAttribute('data-sala');
+        document.getElementById('edit_hospital').value = botao.getAttribute('data-hospital');
+        document.getElementById('edit_edificio').value = botao.getAttribute('data-edificio');
+        document.getElementById('edit_piso').value = botao.getAttribute('data-piso');
+        document.getElementById('edit_sala').value = botao.getAttribute('data-sala');
 
-    document.getElementById('edit_data_aquisicao').value = botao.getAttribute('data-data-aquisicao');
-    document.getElementById('edit_ano_fabrico').value = botao.getAttribute('data-ano-fabrico');
-    document.getElementById('edit_custo').value = botao.getAttribute('data-custo');
+        document.getElementById('edit_data_aquisicao').value = botao.getAttribute('data-data-aquisicao');
+        document.getElementById('edit_ano_fabrico').value = botao.getAttribute('data-ano-fabrico');
+        document.getElementById('edit_custo').value = botao.getAttribute('data-custo');
 
-    document.getElementById('edit_tipo_entrada').value = botao.getAttribute('data-tipo-entrada');
-    document.getElementById('edit_estado').value = botao.getAttribute('data-estado');
-    document.getElementById('edit_criticidade').value = botao.getAttribute('data-criticidade');
-});
-const editAno = document.getElementById('edit_ano_fabrico');
+        document.getElementById('edit_tipo_entrada').value = botao.getAttribute('data-tipo-entrada');
+        document.getElementById('edit_estado').value = botao.getAttribute('data-estado');
+        document.getElementById('edit_criticidade').value = botao.getAttribute('data-criticidade');
+    });
+    const editAno = document.getElementById('edit_ano_fabrico');
 
-editAno.addEventListener('blur', function () {
+    editAno.addEventListener('blur', function() {
 
-    const ano = parseInt(this.value);
+        const ano = parseInt(this.value);
 
-    if (
-        !/^[0-9]{4}$/.test(this.value) ||
-        ano > 2026
-    ) {
-        this.setCustomValidity('erro');
-        this.classList.add('is-invalid');
-        this.classList.remove('is-valid');
-    } else {
-        this.setCustomValidity('');
-        this.classList.add('is-valid');
-        this.classList.remove('is-invalid');
-    }
+        if (
+            !/^[0-9]{4}$/.test(this.value) ||
+            ano > 2026
+        ) {
+            this.setCustomValidity('erro');
+            this.classList.add('is-invalid');
+            this.classList.remove('is-valid');
+        } else {
+            this.setCustomValidity('');
+            this.classList.add('is-valid');
+            this.classList.remove('is-invalid');
+        }
 
-});
+    });
 </script>
 
 <script>
-const modalVer = document.getElementById('modalVerEquipamento');
+    const modalVer = document.getElementById('modalVerEquipamento');
 
-modalVer.addEventListener('show.bs.modal', function (event) {
-    const botao = event.relatedTarget;
+    modalVer.addEventListener('show.bs.modal', function(event) {
+        const botao = event.relatedTarget;
 
-    function texto(id, valor) {
-        document.getElementById(id).textContent = valor || '—';
+        function texto(id, valor) {
+            document.getElementById(id).textContent = valor || '—';
+        }
+
+        const codigo = botao.getAttribute('data-codigo');
+        const designacao = botao.getAttribute('data-designacao');
+
+        texto('ver_subtitulo', designacao + ' · Código ' + codigo);
+
+        texto('ver_codigo', codigo);
+        texto('ver_designacao', designacao);
+        texto('ver_categoria', capitalizar(botao.getAttribute('data-categoria')));
+        texto('ver_marca', botao.getAttribute('data-marca'));
+        texto('ver_modelo', botao.getAttribute('data-modelo'));
+        texto('ver_serie', botao.getAttribute('data-serie'));
+        texto('ver_fabricante', botao.getAttribute('data-fabricante'));
+
+        texto('ver_hospital', botao.getAttribute('data-hospital'));
+        texto('ver_edificio', botao.getAttribute('data-edificio'));
+        texto('ver_piso', botao.getAttribute('data-piso'));
+        texto('ver_sala', botao.getAttribute('data-sala'));
+
+        texto('ver_data_aquisicao', formatarData(botao.getAttribute('data-data-aquisicao')));
+        texto('ver_ano_fabrico', botao.getAttribute('data-ano-fabrico'));
+        texto('ver_custo', formatarEuro(botao.getAttribute('data-custo')));
+        texto('ver_tipo_entrada', formatarTexto(botao.getAttribute('data-tipo-entrada')));
+
+        texto('ver_estado', capitalizar(botao.getAttribute('data-estado')));
+        texto('ver_criticidade', capitalizar(botao.getAttribute('data-criticidade')));
+        texto('ver_data_registo', formatarDataHora(botao.getAttribute('data-registo')));
+    });
+
+    function capitalizar(texto) {
+        if (!texto) return '—';
+        return texto.charAt(0).toUpperCase() + texto.slice(1);
     }
 
-    const codigo = botao.getAttribute('data-codigo');
-    const designacao = botao.getAttribute('data-designacao');
+    function formatarTexto(texto) {
+        if (!texto) return '—';
 
-    texto('ver_subtitulo', designacao + ' · Código ' + codigo);
+        texto = texto.replaceAll('_', ' ');
 
-    texto('ver_codigo', codigo);
-    texto('ver_designacao', designacao);
-    texto('ver_categoria', capitalizar(botao.getAttribute('data-categoria')));
-    texto('ver_marca', botao.getAttribute('data-marca'));
-    texto('ver_modelo', botao.getAttribute('data-modelo'));
-    texto('ver_serie', botao.getAttribute('data-serie'));
-    texto('ver_fabricante', botao.getAttribute('data-fabricante'));
+        if (texto === 'doacao') texto = 'doação';
+        if (texto === 'emprestimo') texto = 'empréstimo';
 
-    texto('ver_hospital', botao.getAttribute('data-hospital'));
-    texto('ver_edificio', botao.getAttribute('data-edificio'));
-    texto('ver_piso', botao.getAttribute('data-piso'));
-    texto('ver_sala', botao.getAttribute('data-sala'));
+        return capitalizar(texto);
+    }
 
-    texto('ver_data_aquisicao', formatarData(botao.getAttribute('data-data-aquisicao')));
-    texto('ver_ano_fabrico', botao.getAttribute('data-ano-fabrico'));
-    texto('ver_custo', formatarEuro(botao.getAttribute('data-custo')));
-    texto('ver_tipo_entrada', formatarTexto(botao.getAttribute('data-tipo-entrada')));
+    function formatarData(data) {
+        if (!data) return '—';
 
-    texto('ver_estado', capitalizar(botao.getAttribute('data-estado')));
-    texto('ver_criticidade', capitalizar(botao.getAttribute('data-criticidade')));
-    texto('ver_data_registo', formatarDataHora(botao.getAttribute('data-registo')));
-});
+        const partes = data.split('-');
 
-function capitalizar(texto) {
-    if (!texto) return '—';
-    return texto.charAt(0).toUpperCase() + texto.slice(1);
-}
+        if (partes.length !== 3) return data;
 
-function formatarTexto(texto) {
-    if (!texto) return '—';
+        return partes[2] + '/' + partes[1] + '/' + partes[0];
+    }
 
-    texto = texto.replaceAll('_', ' ');
+    function formatarDataHora(dataHora) {
+        if (!dataHora) return '—';
 
-    if (texto === 'doacao') texto = 'doação';
-    if (texto === 'emprestimo') texto = 'empréstimo';
+        const partes = dataHora.split(' ');
+        const data = formatarData(partes[0]);
 
-    return capitalizar(texto);
-}
+        if (!partes[1]) return data;
 
-function formatarData(data) {
-    if (!data) return '—';
+        return data + ' ' + partes[1].substring(0, 5);
+    }
 
-    const partes = data.split('-');
+    function formatarEuro(valor) {
+        if (!valor) return '—';
 
-    if (partes.length !== 3) return data;
-
-    return partes[2] + '/' + partes[1] + '/' + partes[0];
-}
-
-function formatarDataHora(dataHora) {
-    if (!dataHora) return '—';
-
-    const partes = dataHora.split(' ');
-    const data = formatarData(partes[0]);
-
-    if (!partes[1]) return data;
-
-    return data + ' ' + partes[1].substring(0, 5);
-}
-
-function formatarEuro(valor) {
-    if (!valor) return '—';
-
-    return Number(valor).toLocaleString('pt-PT', {
-        style: 'currency',
-        currency: 'EUR'
-    });
-}
+        return Number(valor).toLocaleString('pt-PT', {
+            style: 'currency',
+            currency: 'EUR'
+        });
+    }
 </script>
 
 <?php include 'includes/footer.php'; ?>

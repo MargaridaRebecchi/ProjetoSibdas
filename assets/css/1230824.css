@@ -955,3 +955,28 @@ main {
         border-bottom: 1px solid #e1e8ec;
     }
 }
+
+/* BARRA PESQUISA EQUIPAMENTOS */
+.pesquisa-wrapper {
+    width: 100%;
+    display: flex !important;
+    justify-content: flex-end !important;
+    margin-bottom: 15px;
+}
+
+.pesquisa-wrapper .pesquisa-equipamentos {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    display: flex !important;
+    gap: 8px;
+}
+
+.pesquisa-wrapper .pesquisa-equipamentos input {
+    width: 180px !important;
+    max-width: 180px !important;
+}
+.tabela-medgest th,
+.tabela-medgest td {
+    padding: 14px 16px !important;
+}
