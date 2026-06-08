@@ -18,12 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Localização obrigatória
     if (
+        empty($_POST['zona']) ||
         empty($_POST['hospital']) ||
         empty($_POST['edificio']) ||
         empty($_POST['piso']) ||
         empty($_POST['sala'])
     ) {
-        $erros[] = "A localização deve ter hospital, edifício, piso e sala.";
+        $erros[] = "A localização deve ter zona, hospital, edifício, piso e sala.";
     }
 
     // Piso só números
@@ -40,13 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($erros)) {
 
         // 1. Inserir localização
-        $sqlLoc = "INSERT INTO localizacoes_ (hospital, edificio, piso, sala)
-                   VALUES (?, ?, ?, ?)";
+        $sqlLoc = "INSERT INTO localizacoes_ (zona, hospital, edificio, piso, sala)
+                   VALUES (?, ?, ?, ?, ?)";
 
         $stmtLoc = $conn->prepare($sqlLoc);
 
         $stmtLoc->bind_param(
             "ssis",
+            $_POST['zona'],
             $_POST['hospital'],
             $_POST['edificio'],
             $_POST['piso'],
@@ -181,6 +183,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="col-md-6 mb-3">
+                    <label>Zona</label>
+                    <select name="zona" class="form-select form-select-sm" required>
+                        <option value="" selected disabled>Escolha uma zona</option>
+                        <option value="Norte">Norte</option>
+                        <option value="Centro">Centro</option>
+                        <option value="Lisboa e Vale do Tejo">Lisboa e Vale do Tejo</option>
+                        <option value="Alentejo">Alentejo</option>
+                        <option value="Algarve">Algarve</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
                     <label>Hospital</label>
                     <input type="text" name="hospital" class="form-control form-control-sm" required>
                 </div>
@@ -195,6 +209,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="number" name="piso" class="form-control form-control-sm" required>
                 </div>
 
+                <div class="col-md-6 mb-3">
+                    <label>Serviço</label>
+                    <input type="text" name="servico" class="form-control form-control-sm" required>
+                </div>
+                
                 <div class="col-md-6 mb-3">
                     <label>Sala</label>
                     <input type="text" name="sala" class="form-control form-control-sm" required>

@@ -15,10 +15,10 @@
 
                 <ul class="navbar-nav mx-auto gap-1">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-medgest" href="#equipamentos">Equipamentos</a>
+                        <a class="nav-link nav-link-medgest" href="gestao_equipamentos.php">Equipamentos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-medgest" href="#localizacoes">Localizações</a>
+                        <a class="nav-link nav-link-medgest" href="localizacoes.php">Localizações</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-medgest" href="#fornecedores">Fornecedores</a>

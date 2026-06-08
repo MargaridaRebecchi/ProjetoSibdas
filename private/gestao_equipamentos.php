@@ -10,8 +10,8 @@ if ($pesquisa != '') {
     $pesquisaNormal = trim(mb_strtolower($pesquisa));
 
     $pesquisaEspecial = str_replace(
-        ['ã','á','à','â','é','ê','í','ó','ô','õ','ú','ç',' '],
-        ['a','a','a','a','e','e','i','o','o','o','u','c','_'],
+        ['ã', 'á', 'à', 'â', 'é', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ç', ' '],
+        ['a', 'a', 'a', 'a', 'e', 'e', 'i', 'o', 'o', 'o', 'u', 'c', '_'],
         $pesquisaNormal
     );
 
@@ -73,15 +73,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_equipamento']))
     $id_localizacao = (int) $_POST['id_localizacao'];
 
     $sqlUpdateLoc = "UPDATE localizacoes_
-                     SET hospital = ?, edificio = ?, piso = ?, sala = ?
+                     SET zona = ?, hospital = ?, edificio = ?, piso = ?, servico = ?, sala = ?
                      WHERE id_localizacao = ?";
 
     $stmtLoc = $conn->prepare($sqlUpdateLoc);
     $stmtLoc->bind_param(
         "ssisi",
+        $_POST['zona'],
         $_POST['hospital'],
         $_POST['edificio'],
         $_POST['piso'],
+        $_POST['servico'],
         $_POST['sala'],
         $id_localizacao
     );
@@ -116,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_equipamento']))
     exit();
 }
 
-$sql = "SELECT e.*, l.hospital, l.edificio, l.piso, l.sala
+$sql = "SELECT e.*, l.zona, l.hospital, l.edificio, l.piso, l.servico, l.sala
         FROM equipamentos e
         LEFT JOIN localizacoes_ l ON e.id_localizacao = l.id_localizacao
         $whereSQL
@@ -267,9 +269,11 @@ include 'includes/nav.php';
                                             data-serie="<?= htmlspecialchars($row['numero_serie']) ?>"
                                             data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
 
+                                            data-zona="<?= htmlspecialchars($row['zona'] ?? '') ?>"
                                             data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
                                             data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
                                             data-piso="<?= htmlspecialchars($row['piso']) ?>"
+                                            data-servico="<?= htmlspecialchars($row['servico'] ?? '') ?>"
                                             data-sala="<?= htmlspecialchars($row['sala']) ?>"
 
                                             data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
@@ -300,9 +304,11 @@ include 'includes/nav.php';
                                             data-marca="<?= htmlspecialchars($row['marca']) ?>"
                                             data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
                                             data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
+                                            data-servico="<?= htmlspecialchars($row['zona'] ?? '') ?>"
                                             data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
                                             data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
                                             data-piso="<?= htmlspecialchars($row['piso']) ?>"
+                                            data-servico="<?= htmlspecialchars($row['servico'] ?? '') ?>"
                                             data-sala="<?= htmlspecialchars($row['sala']) ?>"
                                             data-data-aquisicao="<?= htmlspecialchars($row['data_aquisicao']) ?>"
                                             data-ano-fabrico="<?= htmlspecialchars($row['ano_fabrico']) ?>"
@@ -500,6 +506,19 @@ include 'includes/nav.php';
                         </div>
 
                         <div class="col-md-6 mb-3">
+                            <label>Zona</label>
+
+                            <select name="zona" id="edit_zona" class="form-select form-select-sm" required>
+                                <option value="" selected disabled>Escolha uma zona</option>
+                                <option value="Norte">Norte</option>
+                                <option value="Centro">Centro</option>
+                                <option value="Lisboa e Vale do Tejo">Lisboa e Vale do Tejo</option>
+                                <option value="Alentejo">Alentejo</option>
+                                <option value="Algarve">Algarve</option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label>Hospital</label>
                             <input type="text" name="hospital" id="edit_hospital" class="form-control form-control-sm" required>
                         </div>
@@ -512,6 +531,11 @@ include 'includes/nav.php';
                         <div class="col-md-6 mb-3">
                             <label>Piso</label>
                             <input type="number" name="piso" id="edit_piso" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Serviço</label>
+                            <input type="text" name="hospital" id="edit_servico" class="form-control form-control-sm" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -644,12 +668,14 @@ include 'includes/nav.php';
                     <div><strong>Fabricante</strong><span id="ver_fabricante"></span></div>
                 </div>
 
-                <h6 class="ficha-secao ficha-localizacao">Localização</h6>
+                <h6 class="ficha-secao ficha-identificacao">Localização</h6>
 
                 <div class="ficha-grid">
+                    <div><strong>Zona</strong><span id="ver_zona"></span></div>
                     <div><strong>Hospital</strong><span id="ver_hospital"></span></div>
                     <div><strong>Edifício</strong><span id="ver_edificio"></span></div>
                     <div><strong>Piso</strong><span id="ver_piso"></span></div>
+                    <div><strong>Serviço</strong><span id="ver_servico"></span></div>
                     <div><strong>Sala</strong><span id="ver_sala"></span></div>
                 </div>
 
@@ -757,9 +783,11 @@ include 'includes/nav.php';
         document.getElementById('edit_modelo').value = botao.getAttribute('data-modelo');
         document.getElementById('edit_fabricante').value = botao.getAttribute('data-fabricante');
 
+        document.getElementById('edit_zona').value = botao.getAttribute('data-zona');
         document.getElementById('edit_hospital').value = botao.getAttribute('data-hospital');
         document.getElementById('edit_edificio').value = botao.getAttribute('data-edificio');
         document.getElementById('edit_piso').value = botao.getAttribute('data-piso');
+        document.getElementById('edit_servico').value = botao.getAttribute('data-servico');
         document.getElementById('edit_sala').value = botao.getAttribute('data-sala');
 
         document.getElementById('edit_data_aquisicao').value = botao.getAttribute('data-data-aquisicao');
@@ -815,9 +843,11 @@ include 'includes/nav.php';
         texto('ver_serie', botao.getAttribute('data-serie'));
         texto('ver_fabricante', botao.getAttribute('data-fabricante'));
 
+        texto('ver_zona', botao.getAttribute('data-zona'));
         texto('ver_hospital', botao.getAttribute('data-hospital'));
         texto('ver_edificio', botao.getAttribute('data-edificio'));
         texto('ver_piso', botao.getAttribute('data-piso'));
+        texto('ver_servico', botao.getAttribute('data-servico'));
         texto('ver_sala', botao.getAttribute('data-sala'));
 
         texto('ver_data_aquisicao', formatarData(botao.getAttribute('data-data-aquisicao')));

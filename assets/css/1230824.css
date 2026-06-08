@@ -893,7 +893,7 @@ main {
 }
 
 .ficha-localizacao {
-    background-color: #eaf7ef;
+    background-color: #eaf3f7; 
 }
 
 .ficha-aquisicao {
@@ -980,3 +980,5 @@ main {
 .tabela-medgest td {
     padding: 14px 16px !important;
 }
+
+/* MODULO LOCALIZAÇÕES */
