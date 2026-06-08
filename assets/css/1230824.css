@@ -981,4 +981,40 @@ main {
     padding: 14px 16px !important;
 }
 
-/* MODULO LOCALIZAÇÕES */
+/* MÓDULO LOCALIZAÇÕES */
+
+/* MÓDULO LOCALIZAÇÕES */
+
+.localizacoes-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 20px 0 0 0 !important;
+    padding: 0 !important;
+}
+
+.localizacoes-tabs {
+    justify-content: flex-start !important;
+    border-bottom: 1px solid #dde7ec;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 20px;
+}
+
+.localizacoes-tabs .nav-link {
+    color: #073a52;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    padding: 12px 18px;
+}
+
+.localizacoes-tabs .nav-link.active {
+    color: #073a52;
+    font-weight: 700;
+    background: transparent;
+    border-bottom: 3px solid #2dd4a0;
+}
+
+.localizacoes-tab-content {
+    min-height: 300px;
+}
