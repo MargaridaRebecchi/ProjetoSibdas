@@ -151,3 +151,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 });
+
+
+// MODULO LOCALIZAÇÕES
+//Fechar as os retangulos quando mudo de aba
+document.querySelectorAll('.localizacoes-tabs .nav-link')
+    .forEach(tab => {
+
+        tab.addEventListener('shown.bs.tab', function () {
+
+            document
+                .querySelectorAll('.accordion-collapse.show')
+                .forEach(item => {
+
+                    bootstrap.Collapse.getOrCreateInstance(item)
+                        .hide();
+
+                });
+
+        });
+
+    });

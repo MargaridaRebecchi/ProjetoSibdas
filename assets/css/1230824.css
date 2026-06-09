@@ -1018,3 +1018,109 @@ main {
 .localizacoes-tab-content {
     min-height: 300px;
 }
+
+.localizacoes-accordion {
+    margin-top: 20px;
+}
+
+.localizacoes-accordion .accordion-item {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.localizacoes-accordion .accordion-button {
+    background-color: #ffffff;
+    color: #073a52;
+    font-weight: 700;
+}
+
+.localizacoes-accordion .accordion-button:not(.collapsed) {
+    background-color: #eef2f5;
+    color: #073a52;
+}
+
+.localizacoes-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: #dde7ec;
+}
+
+.servicos-accordion .accordion-item {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.servicos-accordion .accordion-button {
+    color: #073a52;
+    font-weight: 600;
+    background: #ffffff;
+}
+
+.servicos-accordion .accordion-button:not(.collapsed) {
+    background: #f5f8fa;
+    color: #073a52;
+}
+
+.equipamentos-servico-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.equipamento-servico-item {
+    border: 1px solid #e1e8ec;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #ffffff;
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.equipamento-servico-item strong {
+    color: #073a52;
+}
+
+.equipamento-servico-item span {
+    font-weight: 500;
+}
+
+.equipamento-servico-item small {
+    color: #6c757d;
+}
+.servicos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.servico-coluna {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .servicos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.equipamento-servico-item small {
+    display: inline;
+}
+.equipamento-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.equipamento-nome {
+    font-weight: 500;
+}
+
+.equipamento-localizacao {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 2px;
+}

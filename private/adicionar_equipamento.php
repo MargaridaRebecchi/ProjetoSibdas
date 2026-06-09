@@ -41,17 +41,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($erros)) {
 
         // 1. Inserir localização
-        $sqlLoc = "INSERT INTO localizacoes_ (zona, hospital, edificio, piso, sala)
-                   VALUES (?, ?, ?, ?, ?)";
+        $sqlLoc = "INSERT INTO localizacoes_ (zona, hospital, edificio, piso, servico, sala)
+                   VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmtLoc = $conn->prepare($sqlLoc);
 
         $stmtLoc->bind_param(
-            "ssis",
+            "sssiss",
             $_POST['zona'],
             $_POST['hospital'],
             $_POST['edificio'],
             $_POST['piso'],
+            $_POST['servico'],
             $_POST['sala']
         );
 
