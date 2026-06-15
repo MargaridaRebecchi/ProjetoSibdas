@@ -14,7 +14,9 @@ if ($pesquisa != '') {
         ['a', 'a', 'a', 'a', 'e', 'e', 'i', 'o', 'o', 'o', 'u', 'c', '_'],
         $pesquisaNormal
     );
-
+    if ($pesquisaEspecial == 'manutencao') {
+        $pesquisaEspecial = 'em_manutencao';
+    }
     $pesquisaNormalSQL = $conn->real_escape_string($pesquisaNormal);
     $pesquisaEspecialSQL = $conn->real_escape_string($pesquisaEspecial);
 
@@ -78,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_equipamento']))
 
     $stmtLoc = $conn->prepare($sqlUpdateLoc);
     $stmtLoc->bind_param(
-        "ssisi",
+        "sssissi",
         $_POST['zona'],
         $_POST['hospital'],
         $_POST['edificio'],
@@ -126,6 +128,18 @@ $sql = "SELECT e.*, l.zona, l.hospital, l.edificio, l.piso, l.servico, l.sala
         LIMIT $limite OFFSET $offset";
 
 $result = $conn->query($sql);
+$sqlHospitais = "SELECT DISTINCT zona, hospital
+                 FROM localizacoes_
+                 WHERE zona IS NOT NULL AND hospital IS NOT NULL
+                 ORDER BY zona, hospital";
+
+$resultHospitais = $conn->query($sqlHospitais);
+
+$hospitaisPorZonaJS = [];
+
+while ($h = $resultHospitais->fetch_assoc()) {
+    $hospitaisPorZonaJS[$h['zona']][] = $h['hospital'];
+}
 include 'includes/header.php';
 include 'includes/nav.php';
 ?>
@@ -304,8 +318,8 @@ include 'includes/nav.php';
                                             data-marca="<?= htmlspecialchars($row['marca']) ?>"
                                             data-modelo="<?= htmlspecialchars($row['modelo']) ?>"
                                             data-fabricante="<?= htmlspecialchars($row['fabricante']) ?>"
-                                            data-servico="<?= htmlspecialchars($row['zona'] ?? '') ?>"
-                                            data-hospital="<?= htmlspecialchars($row['hospital']) ?>"
+                                            data-zona="<?= htmlspecialchars($row['zona'] ?? '') ?>"
+                                            data-hospital="<?= htmlspecialchars($row['hospital'] ?? '') ?>"
                                             data-edificio="<?= htmlspecialchars($row['edificio']) ?>"
                                             data-piso="<?= htmlspecialchars($row['piso']) ?>"
                                             data-servico="<?= htmlspecialchars($row['servico'] ?? '') ?>"
@@ -520,7 +534,13 @@ include 'includes/nav.php';
                         </div>
                         <div class="col-md-6 mb-3">
                             <label>Hospital</label>
-                            <input type="text" name="hospital" id="edit_hospital" class="form-control form-control-sm" required>
+                            <select name="hospital" id="edit_hospital" class="form-select form-select-sm" required disabled>
+                                <option value="">Escolha primeiro uma zona</option>
+                            </select>
+
+                            <div id="erro_hospital_zona" class="text-danger small mt-1 d-none">
+                                Precisa de escolher a zona primeiro.
+                            </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -535,7 +555,7 @@ include 'includes/nav.php';
 
                         <div class="col-md-6 mb-3">
                             <label>Serviço</label>
-                            <input type="text" name="hospital" id="edit_servico" class="form-control form-control-sm" required>
+                            <input type="text" name="servico" id="edit_servico" class="form-control form-control-sm" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -769,6 +789,51 @@ include 'includes/nav.php';
 <script>
     const modalEditar = document.getElementById('modalEditarEquipamento');
 
+    const hospitaisPorZona = <?= json_encode($hospitaisPorZonaJS, JSON_UNESCAPED_UNICODE) ?>;
+
+    function carregarHospitaisPorZona(zona, hospitalAtual = '') {
+        const selectHospital = document.getElementById('edit_hospital');
+        const erro = document.getElementById('erro_hospital_zona');
+
+        selectHospital.innerHTML = '';
+
+        if (!zona) {
+            selectHospital.disabled = true;
+            selectHospital.innerHTML = '<option value="">Escolha primeiro uma zona</option>';
+            return;
+        }
+
+        selectHospital.disabled = false;
+        erro.classList.add('d-none');
+
+        selectHospital.innerHTML = '<option value="">Escolha um hospital</option>';
+
+        if (hospitaisPorZona[zona]) {
+            hospitaisPorZona[zona].forEach(function(hospital) {
+                const option = document.createElement('option');
+                option.value = hospital;
+                option.textContent = hospital;
+
+                if (hospital === hospitalAtual) {
+                    option.selected = true;
+                }
+
+                selectHospital.appendChild(option);
+            });
+        }
+    }
+
+    document.getElementById('edit_zona').addEventListener('change', function() {
+        carregarHospitaisPorZona(this.value);
+    });
+
+    document.getElementById('edit_hospital').addEventListener('mousedown', function(e) {
+        if (!document.getElementById('edit_zona').value) {
+            document.getElementById('erro_hospital_zona').classList.remove('d-none');
+        }
+    });
+
+
     modalEditar.addEventListener('show.bs.modal', function(event) {
         const botao = event.relatedTarget;
 
@@ -783,8 +848,11 @@ include 'includes/nav.php';
         document.getElementById('edit_modelo').value = botao.getAttribute('data-modelo');
         document.getElementById('edit_fabricante').value = botao.getAttribute('data-fabricante');
 
-        document.getElementById('edit_zona').value = botao.getAttribute('data-zona');
-        document.getElementById('edit_hospital').value = botao.getAttribute('data-hospital');
+        const zonaAtual = botao.getAttribute('data-zona');
+        const hospitalAtual = botao.getAttribute('data-hospital');
+
+        document.getElementById('edit_zona').value = zonaAtual;
+        carregarHospitaisPorZona(zonaAtual, hospitalAtual);
         document.getElementById('edit_edificio').value = botao.getAttribute('data-edificio');
         document.getElementById('edit_piso').value = botao.getAttribute('data-piso');
         document.getElementById('edit_servico').value = botao.getAttribute('data-servico');

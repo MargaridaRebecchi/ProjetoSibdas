@@ -1124,3 +1124,83 @@ main {
     color: #6c757d;
     margin-top: 2px;
 }
+/*PARTE GERAL DAS LOCS */
+.resumo-localizacoes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.resumo-localizacao-card {
+    background: linear-gradient(135deg, #073a52 0%, #0b5779 100%);
+    border-radius: 16px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(7,58,82,0.15);
+    transition: transform 0.2s ease;
+}
+
+.resumo-localizacao-card:hover {
+    transform: translateY(-3px);
+}
+
+.resumo-localizacao-card .numero {
+    font-size: 2.3rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.resumo-localizacao-card .titulo {
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+
+
+
+.resumo-zonas {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.resumo-zonas h5 {
+    color: #073a52;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.linha-zona {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e1e8ec;
+}
+
+.linha-zona:last-child {
+    border-bottom: none;
+}
+
+.linha-zona strong {
+    color: #073a52;
+}
+
+.linha-zona span {
+    color: #198754;
+    font-weight: 600;
+}
+
+@media (max-width: 992px) {
+    .resumo-localizacoes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .resumo-localizacoes {
+        grid-template-columns: 1fr;
+    }
+}
