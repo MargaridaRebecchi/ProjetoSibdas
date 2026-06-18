@@ -21,7 +21,7 @@
                         <a class="nav-link nav-link-medgest" href="localizacoes.php">Localizações</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-medgest" href="#fornecedores">Fornecedores</a>
+                        <a class="nav-link nav-link-medgest" href="fornecedores.php">Fornecedores</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-medgest" href="#garantias">Garantias e Contratos</a>

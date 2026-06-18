@@ -405,8 +405,7 @@ include 'includes/nav.php';
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Remover equipamento</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Remover equipamento</h5>   
             </div>
 
             <div class="modal-body">
@@ -428,7 +427,7 @@ include 'includes/nav.php';
     </div>
 </div>
 
-<!--MODAL SUCESSO ADIÇÃO DE EQUIPAMENTO -->
+<!--MODAL SUCESSO REMOÇÃO DE EQUIPAMENTO -->
 <div class="modal fade" id="modalSucesso" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
