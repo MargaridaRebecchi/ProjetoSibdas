@@ -287,10 +287,11 @@ function preencherTesteFornecedor() {
     document.querySelector('[name="observacoes"]').value =
         'Fornecedor de teste para validação do sistema.';
 }
-
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX//
+//MÓDULO FORNECEDORES
 // Modal editar fornecedor
 
-const modalEditarFornecedor =
+var modalEditarFornecedor =
     document.getElementById('modalEditarFornecedor');
 
 if (modalEditarFornecedor) {
@@ -419,4 +420,157 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+// Modal sucesso associação
+document.addEventListener('DOMContentLoaded', function() {
 
+    if (typeof mostrarModalAssociacao === 'undefined' || !mostrarModalAssociacao) {
+        return;
+    }
+
+    const modalEl = document.getElementById('modalAssociacaoSucesso');
+
+    if (!modalEl) return;
+
+    const modal = new bootstrap.Modal(modalEl);
+
+    modal.show();
+
+    window.history.replaceState(
+        {},
+        document.title,
+        'fornecedores.php'
+    );
+
+});
+
+// Modal associação duplicada
+document.addEventListener('DOMContentLoaded', function() {
+
+    if (typeof mostrarModalDuplicado === 'undefined' || !mostrarModalDuplicado) {
+        return;
+    }
+
+    const modalEl = document.getElementById('modalAssociacaoDuplicada');
+
+    if (!modalEl) return;
+
+    const modal = new bootstrap.Modal(modalEl);
+
+    modal.show();
+
+    window.history.replaceState(
+        {},
+        document.title,
+        'fornecedores.php'
+    );
+
+});
+// Associar fornecedor/equipamento - sincronizar papel e fornecedor
+function atualizarPapelFornecedor() {
+
+    const fornecedor = document.getElementById('selectFornecedorAssociar');
+    const papel = document.getElementById('selectPapelAssociar');
+    const inputPapel = document.getElementById('inputPapelAssociar');
+
+    if (!fornecedor || !papel || !inputPapel) return;
+
+    const opcao = fornecedor.options[fornecedor.selectedIndex];
+
+    if (!opcao || opcao.value === '') {
+        papel.value = '';
+        inputPapel.value = '';
+        return;
+    }
+
+    const tipo = opcao.dataset.tipo;
+
+    papel.value = tipo;
+    inputPapel.value = tipo;
+}
+window.atualizarPapelFornecedor = function () {
+
+    const fornecedor = document.getElementById('selectFornecedorAssociar');
+    const papel = document.getElementById('selectPapelAssociar');
+    const inputPapel = document.getElementById('inputPapelAssociar');
+
+    if (!fornecedor || !papel || !inputPapel) return;
+
+    const opcao = fornecedor.options[fornecedor.selectedIndex];
+
+    if (!opcao || opcao.value === '') {
+        papel.value = '';
+        inputPapel.value = '';
+        return;
+    }
+
+    const tipo = opcao.getAttribute('data-tipo');
+
+    papel.value = tipo;
+    inputPapel.value = tipo;
+};
+let fornecedoresAssociarOriginais = [];
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fornecedor = document.getElementById('selectFornecedorAssociar');
+
+    if (!fornecedor) return;
+
+    fornecedoresAssociarOriginais = Array.from(fornecedor.options).map(function(opcao) {
+        return {
+            value: opcao.value,
+            text: opcao.textContent,
+            tipo: opcao.getAttribute('data-tipo')
+        };
+    });
+
+});
+
+window.filtrarFornecedoresPorPapel = function () {
+
+    const fornecedor = document.getElementById('selectFornecedorAssociar');
+    const papel = document.getElementById('selectPapelAssociar');
+    const inputPapel = document.getElementById('inputPapelAssociar');
+
+    const tipoEscolhido = papel.value;
+
+    inputPapel.value = tipoEscolhido;
+
+    fornecedor.innerHTML = '';
+
+    fornecedoresAssociarOriginais.forEach(function(opcao) {
+
+        if (
+            opcao.value === '' ||
+            tipoEscolhido === '' ||
+            opcao.tipo === tipoEscolhido
+        ) {
+            const novaOpcao = document.createElement('option');
+
+            novaOpcao.value = opcao.value;
+            novaOpcao.textContent = opcao.text;
+
+            if (opcao.tipo) {
+                novaOpcao.setAttribute('data-tipo', opcao.tipo);
+            }
+
+            fornecedor.appendChild(novaOpcao);
+        }
+
+    });
+
+    fornecedor.value = '';
+};
+// Botao informativo papel
+document.addEventListener('DOMContentLoaded', function () {
+
+    const tooltipTriggerList =
+        [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+
+        new bootstrap.Tooltip(tooltipTriggerEl);
+
+    });
+
+});
