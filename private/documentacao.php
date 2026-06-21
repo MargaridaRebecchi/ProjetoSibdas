@@ -8,6 +8,20 @@ if (isset($_GET['apagar']) && is_numeric($_GET['apagar'])) {
 
     $id_documento = (int) $_GET['apagar'];
 
+    $stmtBusca = $conn->prepare("
+        SELECT id_contrato
+        FROM documentos_equipamento
+        WHERE id_documento = ?
+    ");
+
+    $stmtBusca->bind_param("i", $id_documento);
+    $stmtBusca->execute();
+
+    $resultadoBusca = $stmtBusca->get_result();
+    $doc = $resultadoBusca->fetch_assoc();
+
+    $id_contrato = $doc['id_contrato'] ?? null;
+
     $stmt = $conn->prepare("
         DELETE FROM documentos_equipamento
         WHERE id_documento = ?
@@ -15,6 +29,16 @@ if (isset($_GET['apagar']) && is_numeric($_GET['apagar'])) {
 
     $stmt->bind_param("i", $id_documento);
     $stmt->execute();
+
+    if (!empty($id_contrato)) {
+        $stmtContrato = $conn->prepare("
+            DELETE FROM contratos_garantias
+            WHERE id_contrato = ?
+        ");
+
+        $stmtContrato->bind_param("i", $id_contrato);
+        $stmtContrato->execute();
+    }
 
     header("Location: documentacao.php?apagado=1");
     exit;
@@ -31,6 +55,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_documento'])) 
     $data_documento = $_POST['data_documento'];
     $data_validade = !empty($_POST['data_validade']) ? $_POST['data_validade'] : null;
     $entidade_responsavel = !empty($_POST['entidade_responsavel']) ? $_POST['entidade_responsavel'] : null;
+
+    if (
+        !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_documento) ||
+        (int)substr($data_documento, 0, 4) > 9999 ||
+        (int)substr($data_documento, 0, 4) < 1000
+    ) {
+        header("Location: documentacao.php?datas_invalidas=1");
+        exit;
+    }
+
+    if (
+        !empty($data_validade) &&
+        (
+            !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_validade) ||
+            (int)substr($data_validade, 0, 4) > 9999 ||
+            (int)substr($data_validade, 0, 4) < 1000 ||
+            $data_documento > $data_validade
+        )
+    ) {
+        header("Location: documentacao.php?datas_invalidas=1");
+        exit;
+    }
 
     $stmt = $conn->prepare("
         UPDATE documentos_equipamento
@@ -407,12 +453,25 @@ include 'includes/nav.php';
 
                                 <div class="col-md-6 mb-3">
                                     <label>Data do documento</label>
-                                    <input type="date" name="data_documento" id="edit_data_documento" class="form-control form-control-sm" required>
+                                    <input
+                                        type="date"
+                                        name="data_documento"
+                                        id="edit_data_documento"
+                                        class="form-control form-control-sm"
+                                        min="1000-01-01"
+                                        max="3000-12-31"
+                                        required>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label>Data de validade</label>
-                                    <input type="date" name="data_validade" id="edit_data_validade" class="form-control form-control-sm">
+                                    <input
+                                        type="date"
+                                        name="data_validade"
+                                        id="edit_data_validade"
+                                        class="form-control form-control-sm"
+                                        min="1000-01-01"
+                                        max="3000-12-31">
                                 </div>
 
                                 <div class="col-md-6 mb-3" id="edit_campo_entidade_responsavel" style="display:none;">

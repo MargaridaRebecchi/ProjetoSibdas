@@ -25,6 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome_documento = trim($_POST['nome_documento']);
     $data_documento = $_POST['data_documento'];
     $data_validade = !empty($_POST['data_validade']) ? $_POST['data_validade'] : null;
+    if (
+        !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_documento) ||
+        (int)substr($data_documento, 0, 4) > 9999 ||
+        (int)substr($data_documento, 0, 4) < 1000
+    ) {
+        header("Location: adicionar_documento.php?datas_invalidas=1");
+        exit;
+    }
+
+    if (
+        !empty($data_validade) &&
+        (
+            !preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_validade) ||
+            (int)substr($data_validade, 0, 4) > 9999 ||
+            (int)substr($data_validade, 0, 4) < 1000 ||
+            $data_documento > $data_validade
+        )
+    ) {
+        header("Location: adicionar_documento.php?datas_invalidas=1");
+        exit;
+    }
     $entidade_responsavel = !empty($_POST['entidade_responsavel']) ? $_POST['entidade_responsavel'] : null;
     if (
         ($tipo_documento === 'garantia' || $tipo_documento === 'contrato') &&
@@ -198,13 +219,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         type="date"
                         name="data_documento"
                         class="form-control form-control-sm"
+                        min="1000-01-01"
                         max="<?= date('Y-m-d') ?>"
                         required>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label>Data de validade</label>
-                    <input type="date" name="data_validade" id="data_validade_documento" class="form-control form-control-sm">
+                    <input
+                        type="date"
+                        name="data_validade"
+                        id="data_validade_documento"
+                        class="form-control form-control-sm"
+                        min="1000-01-01"
+                        max="3000-12-31">
                     <small class="text-muted">
                         Obrigatória apenas para contratos e garantias.
                     </small>

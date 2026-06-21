@@ -604,6 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 //Modal editar documento
+    
     if (modalEditarDocumento) {
         modalEditarDocumento.addEventListener('show.bs.modal', function (event) {
             const botao = event.relatedTarget;
@@ -617,9 +618,25 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('edit_data_validade').value = botao.getAttribute('data-validade') || '';
 
             const tipoEdit = document.getElementById('edit_tipo_documento');
+            const dataEdit = document.getElementById('edit_data_documento');
+            const validadeEdit = document.getElementById('edit_data_validade');
             const campoEntidadeEdit = document.getElementById('edit_campo_entidade_responsavel');
             const entidadeEdit = document.getElementById('edit_entidade_responsavel');
-            const validadeEdit = document.getElementById('edit_data_validade');
+
+            function validarDatasEditDocumento() {
+                
+
+                if (
+                    validadeEdit.value !== '' &&
+                    dataEdit.value > validadeEdit.value
+                ) {
+                    validadeEdit.setCustomValidity(
+                        'A data de validade deve ser posterior à data do documento.'
+                    );
+                } else {
+                    validadeEdit.setCustomValidity('');
+                }
+            }
 
             function atualizarCamposEditDocumento() {
                 if (
@@ -635,16 +652,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     entidadeEdit.value = '';
                     campoEntidadeEdit.style.display = 'none';
                 }
+
+                validarDatasEditDocumento();
             }
 
             entidadeEdit.value = botao.getAttribute('data-entidade') || '';
 
-            atualizarCamposEditDocumento();
-
             tipoEdit.onchange = atualizarCamposEditDocumento;
+            dataEdit.onchange = validarDatasEditDocumento;
+            validadeEdit.onchange = validarDatasEditDocumento;
+
+            atualizarCamposEditDocumento();
         });
     }
-    
+
     const params = new URLSearchParams(window.location.search);
 
     if (params.get('apagado') === '1' && modalSucesso) {
@@ -679,23 +700,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-// Tornar data de validade obrigatória para contrato/garantia
+// Tornar validade e entidade obrigatórias para contrato/garantia
 document.addEventListener('DOMContentLoaded', function () {
 
-    const tipoDocumento = document.querySelector('[name="tipo_documento"]');
-    const dataValidade = document.querySelector('[name="data_validade"]');
-
-    if (!tipoDocumento || !dataValidade) return;
-
-    function atualizarObrigatoriedadeValidade() {
-
+    const tipoDocumento = document.querySelector('select[name="tipo_documento"]');
+    const dataDocumento = document.querySelector('input[name="data_documento"]');
+    const dataValidade = document.querySelector('input[name="data_validade"]');
     const campoEntidade = document.getElementById('campo_entidade_responsavel');
-    const entidadeResponsavel = document.querySelector('[name="entidade_responsavel"]');
+    const entidadeResponsavel = document.querySelector('select[name="entidade_responsavel"]');
 
-        if (
-            tipoDocumento.value === 'garantia' ||
-            tipoDocumento.value === 'contrato'
-        ) {
+    if (!tipoDocumento || !dataDocumento || !dataValidade) return;
+
+    function atualizarCamposDocumento() {
+
+        const tipo = tipoDocumento.value;
+
+        if (tipo === 'garantia' || tipo === 'contrato') {
+
             dataValidade.required = true;
 
             if (campoEntidade) {
@@ -707,8 +728,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         } else {
+
             dataValidade.required = false;
-            dataValidade.classList.remove('is-invalid');
 
             if (campoEntidade) {
                 campoEntidade.style.display = 'none';
@@ -719,10 +740,80 @@ document.addEventListener('DOMContentLoaded', function () {
                 entidadeResponsavel.value = '';
             }
         }
+
+        validarDatasAdicionarDocumento();
     }
 
-    tipoDocumento.addEventListener('change', atualizarObrigatoriedadeValidade);
+    function validarDatasAdicionarDocumento() {
 
-    atualizarObrigatoriedadeValidade();
+        
+
+        if (
+            dataValidade.value !== '' &&
+            dataDocumento.value > dataValidade.value
+        ) {
+            dataValidade.setCustomValidity(
+                'A data de validade deve ser posterior à data do documento.'
+            );
+        } else {
+            dataValidade.setCustomValidity('');
+        }
+    }
+
+    tipoDocumento.addEventListener('change', atualizarCamposDocumento);
+    dataDocumento.addEventListener('change', validarDatasAdicionarDocumento);
+    dataValidade.addEventListener('change', validarDatasAdicionarDocumento);
+
+    atualizarCamposDocumento();
+
+});
+//XXXXXXXXXXXXXXXXXXX
+//MÓDULO CONTRATOS E GARANTIAS
+
+// Filtros contratos/garantias
+document.addEventListener('DOMContentLoaded', function () {
+
+    const botoesFiltro = document.querySelectorAll('.filtro-contrato');
+    const grupos = document.querySelectorAll('.contrato-equipamento-grupo');
+
+    if (!botoesFiltro.length || !grupos.length) return;
+
+    botoesFiltro.forEach(function (botao) {
+
+        botao.addEventListener('click', function () {
+
+            const filtro = this.getAttribute('data-filtro');
+
+            botoesFiltro.forEach(b => b.classList.remove('ativo'));
+            this.classList.add('ativo');
+
+            grupos.forEach(function (grupo) {
+
+                const cards = grupo.querySelectorAll('.contrato-card');
+                let temVisivel = false;
+
+                cards.forEach(function (card) {
+
+                    const estado = card.getAttribute('data-estado');
+
+                    if (
+                        filtro === 'todos' ||
+                        estado === 'contrato-' + filtro
+                    ) {
+                        card.style.display = '';
+                        temVisivel = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+
+                });
+
+                grupo.style.display = temVisivel ? '' : 'none';
+
+            });
+
+        });
+
+    });
 
 });

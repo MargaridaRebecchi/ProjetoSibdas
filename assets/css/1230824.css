@@ -1376,3 +1376,257 @@ main {
     border-color: #0b5779 !important;
     color: white !important;
 }
+
+/*XXXXXXXXXXXXXXXXXXXX*/
+/* MÓDULO CONTRATOS E GARANTIAS */
+
+.contratos-container {
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0;
+}
+
+.resumo-contratos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.resumo-contrato-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 12px;
+    padding: 18px 20px;
+}
+
+.resumo-contrato-card span {
+    color: #073a52;
+    font-size: 2rem;
+    font-weight: 700;
+    display: block;
+}
+
+.resumo-contrato-card h6 {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 6px 0 0;
+}
+
+.contratos-subtitulo {
+    color: #073a52;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 35px;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #2dd4a0;
+    width: fit-content;
+}
+
+.alerta-contrato-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.alerta-contrato-card strong {
+    color: #073a52;
+    display: block;
+}
+
+.alerta-contrato-card small {
+    color: #6c757d;
+}
+
+.contratos-accordion .accordion-item {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.contratos-accordion .accordion-button {
+    background-color: #ffffff;
+    color: #073a52;
+    font-weight: 700;
+}
+
+.contratos-accordion .accordion-button:not(.collapsed) {
+    background-color: #eef2f5;
+    color: #073a52;
+}
+
+.contratos-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: #dde7ec;
+}
+
+.contrato-equipamento-item {
+    border: 1px solid #e1e8ec;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.4fr 1fr auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge-contrato {
+    background-color: #eef2f5;
+    color: #073a52;
+    border: 1px solid #d7e0e6;
+    font-weight: 600;
+    padding: 6px 12px;
+}
+
+.contrato-datas {
+    display: flex;
+    flex-direction: column;
+    color: #6c757d;
+}
+
+.contrato-ativo {
+    color: #198754;
+    font-weight: 700;
+}
+
+.contrato-expirar {
+    color: #d39e00;
+    font-weight: 700;
+}
+
+.contrato-expirado {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+@media (max-width: 992px) {
+    .resumo-contratos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .alerta-contrato-card,
+    .contrato-equipamento-item {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .resumo-contratos {
+        grid-template-columns: 1fr;
+    }
+}
+.contrato-card {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 16px;
+    margin-bottom: 12px;
+    max-width: none;
+    width: 100%;
+}
+
+.contrato-card-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.contrato-card-entidade {
+    color: #073a52;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.contrato-card-datas {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 12px;
+}
+
+.contrato-card-datas small {
+    display: block;
+    color: #6c757d;
+}
+
+.contrato-card-datas strong {
+    color: #073a52;
+}
+
+.contrato-card-prazo {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.contrato-card-acoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+.contratos-accordion .accordion-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.contrato-card {
+    width: 420px;
+    flex: 0 0 420px;
+}
+@media (max-width: 768px) {
+    .contratos-accordion .accordion-body {
+        grid-template-columns: 1fr;
+    }
+}
+.alerta-contrato-card .badge-contrato {
+    width: fit-content;
+    justify-self: center;
+}
+.alertas-contratos {
+    margin-bottom: 35px;
+}
+
+.contratos-accordion {
+    margin-top: 5px;
+}
+.contrato-accordion-titulo {
+    display: flex;
+    flex-direction: column;
+}
+
+.contrato-accordion-titulo small {
+    color: #6c757d;
+    font-weight: 500;
+    margin-top: 3px;
+}
+.filtros-contratos {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.filtro-contrato {
+    border: none;
+    background: transparent;
+    color: #073a52;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-bottom: 3px solid transparent;
+}
+
+.filtro-contrato.ativo {
+    border-bottom-color: #2dd4a0;
+    font-weight: 700;
+}

@@ -27,7 +27,7 @@
                         <a class="nav-link nav-link-medgest" href="documentacao.php">Documentação</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-medgest" href="#garantias">Garantias e Contratos</a>
+                        <a class="nav-link nav-link-medgest" href="contratos_garantias.php">Garantias e Contratos</a>
                     </li>
                 
                     <li class="nav-item">
