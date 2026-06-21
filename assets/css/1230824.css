@@ -54,9 +54,25 @@ h1, h2, h3 {
   padding: 10px 20px;
 
   /* Fixa no topo */
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+}
+.navbar-medgest .nav-link-medgest {
+    position: relative;
+}
+
+.navbar-medgest .nav-link-medgest.ativo::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 4px;
+    height: 3px;
+    background: var(--cor-acento);
+    border-radius: 10px;
 }
 .navbar-medgest .nav-link-medgest {
   color: white !important;
@@ -67,6 +83,23 @@ h1, h2, h3 {
 
 .navbar-medgest .nav-link-medgest:hover {
   color: var(--cor-acento) !important;
+}
+.navbar-medgest .nav-link-medgest {
+    position: relative;
+}
+
+.navbar-medgest .nav-link-medgest.ativo::after {
+    content: '';
+    position: absolute;
+
+    left: 10px;
+    right: 10px;
+
+    bottom: 2px; /* aproxima do texto */
+
+    height: 3px;
+    background: var(--cor-acento);
+    border-radius: 10px;
 }
 /* Estilo do logótipo na barra de navegação */
 .navbar-medgest  img {
@@ -743,6 +776,9 @@ width: 100%;}
  color: #1a2c35;
 } 
 
+
+/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+/*PARTE PRIVADA*/
 /* FOOTER PRIVADO */
 html, body {
     height: 100%;

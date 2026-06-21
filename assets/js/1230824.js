@@ -1,4 +1,26 @@
+//INDEX
+// Navbar pública - link ativo
+document.addEventListener('DOMContentLoaded', function () {
 
+    const linksPublicos = document.querySelectorAll(
+        '.navbar-medgest .nav-link-medgest[href^="#"]'
+    );
+
+    linksPublicos.forEach(function (link) {
+
+        link.addEventListener('click', function () {
+
+            linksPublicos.forEach(function (l) {
+                l.classList.remove('ativo');
+            });
+
+            this.classList.add('ativo');
+
+        });
+
+    });
+
+});
 //INDEX - HERO- ESTATS
 document.addEventListener("DOMContentLoaded", function () {
     const numeros = document.querySelectorAll(".hero-stat-numero");

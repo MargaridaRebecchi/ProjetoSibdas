@@ -26,7 +26,7 @@ require_once __DIR__ . '/../config/config.php';
         rel="stylesheet">
 </head>
 
-<body id="#inicio">
+<body>
     <!-- Navegação -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-medgest fixed-top">
         <div class="container-fluid px-4">
