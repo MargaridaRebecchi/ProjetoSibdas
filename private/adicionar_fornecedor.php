@@ -19,9 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (
         $nome_empresa == '' || $nif == '' || $telefone == '' || $email == '' ||
         $morada == '' || $website == '' || $pessoa_contacto == '' ||
-        $telefone_contacto == '' || $tipo_fornecedor == '' || $observacoes == ''
+        $telefone_contacto == '' || $tipo_fornecedor == '' 
     ) {
-        $erro = "Todos os campos são obrigatórios.";
+        
     } elseif (!preg_match('/^[0-9]{9}$/', $nif)) {
         $erro = "O NIF deve ter exatamente 9 dígitos.";
     } elseif (!preg_match('/^[0-9]{9}$/', $telefone)) {
@@ -168,7 +168,7 @@ include 'includes/nav.php';
 
                 <div class="col-md-12 mb-3">
                     <label>Observações</label>
-                    <textarea name="observacoes" class="form-control form-control-sm" rows="3" required></textarea>
+                    <textarea name="observacoes" class="form-control form-control-sm" rows="3" ></textarea>
                 </div>
 
             </div>

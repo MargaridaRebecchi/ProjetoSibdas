@@ -981,8 +981,7 @@ main {
     padding: 14px 16px !important;
 }
 
-/* MÓDULO LOCALIZAÇÕES */
-
+/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
 /* MÓDULO LOCALIZAÇÕES */
 
 .localizacoes-container {
@@ -1285,3 +1284,95 @@ main {
     border-top: 3px solid #d6e4f0 !important;
 }
 
+/*XXXXXXXXXXXXXXXXXXXX*/
+/* MÓDULO DOCUMENTAÇÃO */
+
+.documentacao-container {
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0;
+}
+
+.documentacao-accordion {
+    margin-top: 20px;
+}
+
+.documentacao-accordion .accordion-item {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.documentacao-accordion .accordion-button {
+    background-color: #ffffff;
+    color: #073a52;
+    font-weight: 700;
+}
+
+.documentacao-accordion .accordion-button:not(.collapsed) {
+    background-color: #eef2f5;
+    color: #073a52;
+}
+
+.documentacao-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: #dde7ec;
+}
+
+.documento-item {
+    border: 1px solid #e1e8ec;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #ffffff;
+    margin-bottom: 10px;
+}
+
+.documento-item h5 {
+    color: #073a52;
+    font-size: 1rem;
+}
+
+.badge-documento {
+    background-color: #073a52 !important;
+    color: white !important;
+    font-weight: 600;
+}
+.dropdown-item:active {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.dropdown-item:focus {
+    background-color: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+.pesquisa-documentacao-form {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 20px;
+    margin-bottom: 25px !important;
+    max-width: 900px !important;
+    align-items: center !important;
+}
+
+.pesquisa-documentacao-form input {
+    flex: 1 !important;
+}
+
+.select-documentacao-tipo {
+    width: 190px !important;
+}
+
+.btn-pesquisar-documentacao {
+    background-color: #073a52 !important;
+    border-color: #073a52 !important;
+    color: white !important;
+}
+
+.btn-pesquisar-documentacao:hover {
+    background-color: #0b5779 !important;
+    border-color: #0b5779 !important;
+    color: white !important;
+}

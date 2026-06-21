@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // MODULO LOCALIZAÇÕES
 //Fechar os retangulos quando mudo de aba
 document.querySelectorAll('.localizacoes-tabs .nav-link')
@@ -172,7 +172,7 @@ document.querySelectorAll('.localizacoes-tabs .nav-link')
         });
 
     });
-
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //MÓDULO FORNECEDORES
 //Validaçoes registo de fornecedores
 document.addEventListener('DOMContentLoaded', function () {
@@ -398,11 +398,12 @@ if (formEditarFornecedor) {
 
 
 // Modal apagar fornecedor
-
 document.addEventListener('DOMContentLoaded', function () {
 
     const modalApagarFornecedor =
         document.getElementById('modalApagarFornecedor');
+
+    if (!modalApagarFornecedor) return;
 
     modalApagarFornecedor.addEventListener('show.bs.modal', function(event) {
 
@@ -411,11 +412,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = botao.getAttribute('data-id');
         const nome = botao.getAttribute('data-nome');
 
-        document.getElementById('nomeFornecedorApagar')
-            .textContent = nome;
+        document.getElementById('nomeFornecedorApagar').textContent = nome;
 
-        document.getElementById('confirmarApagarFornecedor')
-            .href = 'fornecedores.php?apagar=' + id;
+        document.getElementById('confirmarApagarFornecedor').href =
+            'fornecedores.php?apagar=' + id;
 
     });
 
@@ -572,5 +572,157 @@ document.addEventListener('DOMContentLoaded', function () {
         new bootstrap.Tooltip(tooltipTriggerEl);
 
     });
+
+});
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//MÓDULO DOCUMENTAÇÃO
+//Modal apagar documento
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modalApagar = document.getElementById('modalApagarDocumento');
+    const nomeApagar = document.getElementById('nomeDocumentoApagar');
+    const confirmarApagar = document.getElementById('confirmarApagarDocumento');
+    const modalSucesso = document.getElementById('modalSucessoDocumento');
+    const modalEditadoDocumento = document.getElementById('modalEditadoDocumento');
+    const modalEditarDocumento = document.getElementById('modalEditarDocumento');
+    const modalDocumentoDuplicado = document.getElementById('modalDocumentoDuplicado');
+    const modalPdfNaoEncontrado = document.getElementById('modalPdfNaoEncontrado');
+
+    if (modalApagar && nomeApagar && confirmarApagar) {
+        document.querySelectorAll('.btn-apagar-documento').forEach(botao => {
+            botao.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const nome = this.getAttribute('data-nome');
+
+                nomeApagar.textContent = nome;
+                confirmarApagar.href = 'documentacao.php?apagar=' + id;
+
+                new bootstrap.Modal(modalApagar).show();
+            });
+        });
+    }
+//Modal editar documento
+    if (modalEditarDocumento) {
+        modalEditarDocumento.addEventListener('show.bs.modal', function (event) {
+            const botao = event.relatedTarget;
+
+            document.getElementById('edit_id_documento').value = botao.getAttribute('data-id');
+            document.getElementById('edit_id_contrato').value = botao.getAttribute('data-contrato') || '';
+            document.getElementById('edit_id_equipamento').value = botao.getAttribute('data-equipamento');
+            document.getElementById('edit_tipo_documento').value = botao.getAttribute('data-tipo');
+            document.getElementById('edit_nome_documento').value = botao.getAttribute('data-nome');
+            document.getElementById('edit_data_documento').value = botao.getAttribute('data-data');
+            document.getElementById('edit_data_validade').value = botao.getAttribute('data-validade') || '';
+
+            const tipoEdit = document.getElementById('edit_tipo_documento');
+            const campoEntidadeEdit = document.getElementById('edit_campo_entidade_responsavel');
+            const entidadeEdit = document.getElementById('edit_entidade_responsavel');
+            const validadeEdit = document.getElementById('edit_data_validade');
+
+            function atualizarCamposEditDocumento() {
+                if (
+                    tipoEdit.value === 'garantia' ||
+                    tipoEdit.value === 'contrato'
+                ) {
+                    validadeEdit.required = true;
+                    campoEntidadeEdit.style.display = 'block';
+                    entidadeEdit.required = true;
+                } else {
+                    validadeEdit.required = false;
+                    entidadeEdit.required = false;
+                    entidadeEdit.value = '';
+                    campoEntidadeEdit.style.display = 'none';
+                }
+            }
+
+            entidadeEdit.value = botao.getAttribute('data-entidade') || '';
+
+            atualizarCamposEditDocumento();
+
+            tipoEdit.onchange = atualizarCamposEditDocumento;
+        });
+    }
+    
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('apagado') === '1' && modalSucesso) {
+        new bootstrap.Modal(modalSucesso).show();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (params.get('editado') === '1' && modalEditadoDocumento) {
+        new bootstrap.Modal(modalEditadoDocumento).show();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    if (params.get('duplicado') === '1' && modalDocumentoDuplicado) {
+        new bootstrap.Modal(modalDocumentoDuplicado).show();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (params.get('pdf_nao_encontrado') === '1' && modalPdfNaoEncontrado) {
+        new bootstrap.Modal(modalPdfNaoEncontrado).show();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    const modalValidadeObrigatoria = document.getElementById('modalValidadeObrigatoria');
+
+    if (params.get('validade_obrigatoria') === '1' && modalValidadeObrigatoria) {
+        new bootstrap.Modal(modalValidadeObrigatoria).show();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+});
+
+// Tornar data de validade obrigatória para contrato/garantia
+document.addEventListener('DOMContentLoaded', function () {
+
+    const tipoDocumento = document.querySelector('[name="tipo_documento"]');
+    const dataValidade = document.querySelector('[name="data_validade"]');
+
+    if (!tipoDocumento || !dataValidade) return;
+
+    function atualizarObrigatoriedadeValidade() {
+
+    const campoEntidade = document.getElementById('campo_entidade_responsavel');
+    const entidadeResponsavel = document.querySelector('[name="entidade_responsavel"]');
+
+        if (
+            tipoDocumento.value === 'garantia' ||
+            tipoDocumento.value === 'contrato'
+        ) {
+            dataValidade.required = true;
+
+            if (campoEntidade) {
+                campoEntidade.style.display = 'block';
+            }
+
+            if (entidadeResponsavel) {
+                entidadeResponsavel.required = true;
+            }
+
+        } else {
+            dataValidade.required = false;
+            dataValidade.classList.remove('is-invalid');
+
+            if (campoEntidade) {
+                campoEntidade.style.display = 'none';
+            }
+
+            if (entidadeResponsavel) {
+                entidadeResponsavel.required = false;
+                entidadeResponsavel.value = '';
+            }
+        }
+    }
+
+    tipoDocumento.addEventListener('change', atualizarObrigatoriedadeValidade);
+
+    atualizarObrigatoriedadeValidade();
 
 });

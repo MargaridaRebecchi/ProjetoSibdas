@@ -75,10 +75,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['associar_fornecedor'])
     ");
 
     $stmt->bind_param("iis", $id_equipamento, $id_fornecedor, $papel);
+    try {
     $stmt->execute();
 
-    header("Location: fornecedores.php?tab=associacoes&associado=1");
+    header("Location: fornecedores.php?adicionado=1");
     exit();
+
+} catch (mysqli_sql_exception $e) {
+
+    if ($e->getCode() == 1062) {
+        header("Location: adicionar_fornecedor.php?erro_nif=1");
+        exit();
+    }
+
+    die("Erro ao adicionar fornecedor: " . $e->getMessage());
+}
 }
 /* BARRA DE PESQUISA FORNECDORES E ASSOCIAÇÕES*/
 $pesquisa = $_GET['pesquisa'] ?? '';
@@ -553,7 +564,7 @@ include 'includes/nav.php';
 
                 <section class="private-card">
 
-                    <h5>Associar fornecedor a equipamento</h5>
+
                     <p class="text-muted">
                         Selecione um fornecedor, um equipamento e o papel que esse fornecedor tem relativamente ao equipamento.
                     </p>
@@ -774,8 +785,8 @@ include 'includes/nav.php';
                         <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
 
                             <?php if ($paginaAssociacoes > 1): ?>
-                                <a href="fornecedores.php?tab=associacoes&pesquisa_assoc=<?= urlencode($pesquisaAssoc) ?>&pagina_assoc=<?= $paginaAssociacoes - 1 ?>
-                                    class=" btn btn-sm btn-outline-secondary">
+                                <a href="fornecedores.php?tab=associacoes&pagina_assoc=<?= $paginaAssociacoes - 1 ?>"
+                                    class="btn btn-sm btn-outline-secondary">
                                     <i class="fas fa-chevron-left"></i>
                                 </a>
                             <?php endif; ?>
@@ -785,8 +796,8 @@ include 'includes/nav.php';
                             </span>
 
                             <?php if ($paginaAssociacoes < $totalPaginasAssociacoes): ?>
-                                <a href="fornecedores.php?tab=associacoes&pesquisa_assoc=<?= urlencode($pesquisaAssoc) ?>&pagina_assoc=<?= $paginaAssociacoes + 1 ?>
-                                    class=" btn btn-sm btn-outline-secondary">
+                                <a href="fornecedores.php?tab=associacoes&pagina_assoc=<?= $paginaAssociacoes + 1 ?>"
+                                    class="btn btn-sm btn-outline-secondary">
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                             <?php endif; ?>
@@ -1142,35 +1153,40 @@ include 'includes/nav.php';
 
     <link rel="stylesheet" href="/SIBDAS_PROJETO_26_MEDGEST/assets/css/1230824.css">
     <style>
-.tooltip {
-    --bs-tooltip-bg: #e8eef1 !important;
-    --bs-tooltip-color: #212529 !important;
-    --bs-tooltip-opacity: 1 !important;
-}
+        .tooltip {
+            --bs-tooltip-bg: #e8eef1 !important;
+            --bs-tooltip-color: #212529 !important;
+            --bs-tooltip-opacity: 1 !important;
+        }
 
-.tooltip .tooltip-inner {
-    background-color: #e8eef1 !important;
-    color: #212529 !important;
-    border: 1px solid #ced4da !important;
-    max-width: 320px;
-    text-align: left;
-    padding: 12px;
-    font-size: 0.9rem;
-}
+        .tooltip .tooltip-inner {
+            background-color: #e8eef1 !important;
+            color: #212529 !important;
+            border: 1px solid #ced4da !important;
+            max-width: 320px;
+            text-align: left;
+            padding: 12px;
+            font-size: 0.9rem;
+        }
 
-.tooltip .tooltip-arrow::before {
-    border-top-color: #e8eef1 !important;
-    border-bottom-color: #e8eef1 !important;
-    border-left-color: #e8eef1 !important;
-    border-right-color: #e8eef1 !important;
-}
+        .tooltip .tooltip-arrow::before {
+            border-top-color: #e8eef1 !important;
+            border-bottom-color: #e8eef1 !important;
+            border-left-color: #e8eef1 !important;
+            border-right-color: #e8eef1 !important;
+        }
 
-.fa-question-circle {
-    color: #0d4e6d !important;
-    cursor: pointer;
-    font-size: 0.95rem;
-}
-</style>
+        .fa-question-circle {
+            color: #0d4e6d !important;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+    </style>
+    <?php if (isset($_GET['pagina_assoc']) || isset($_GET['pesquisa_assoc'])): ?>
+        <script>
+            window.history.replaceState({}, document.title, 'fornecedores.php');
+        </script>
+    <?php endif; ?>
 </body>
 
 <?php include 'includes/footer.php'; ?>
