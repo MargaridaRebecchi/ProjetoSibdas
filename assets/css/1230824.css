@@ -1788,3 +1788,83 @@ main {
     border-bottom-color: #2dd4a0;
     font-weight: 700;
 }
+
+/*XXXXXXXXXXXXXXXXXXXX*/
+/* DASHBOARD */
+/*DASHBOARD EQUIPAMENTOS */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 12px;
+    padding: 18px 20px;
+}
+
+.dashboard-card h6 {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.dashboard-card span {
+    color: #073a52;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.dashboard-graficos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dashboard-grafico-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 14px;
+    padding: 20px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+}
+.dashboard-grafico-card canvas {
+    max-height: 250px !important;
+    width: 100% !important;
+}
+
+.dashboard-grafico-card h5 {
+    color: #073a52;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 992px) {
+
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-graficos {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+.criticidade-item strong{
+    margin-left:auto;
+}
+

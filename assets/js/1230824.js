@@ -1012,3 +1012,81 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+//XXXXXXXXXXXXXXXXXXXX
+/*DASHBOARD*/
+/* DASHBOARD EQUIPAMENTOS */
+
+if (document.getElementById('graficoCategorias')) {
+
+    new Chart(
+        document.getElementById('graficoCategorias'),
+        {
+            type: 'doughnut',
+
+            data: {
+                labels: categorias,
+
+                datasets: [{
+                    data: totaisCategorias
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'left',
+
+                        labels: {
+                            boxWidth: 14,
+                            padding: 15,
+
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
+}
+
+if (document.getElementById('graficoCriticidade')) {
+
+    new Chart(
+        document.getElementById('graficoCriticidade'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: criticidades,
+
+                datasets: [{
+                    label: 'Equipamentos',
+                    data: totaisCriticidade,
+
+                    backgroundColor: coresCriticidade,
+
+                    borderRadius: 8,
+                    barThickness: 25
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
