@@ -246,47 +246,7 @@ document.querySelectorAll('.localizacoes-tabs .nav-link')
 //XXXXXXXXXXXXXXXXXXX
 // MÓDULO LOCALIZAÇÕES - GRÁFICO
 
-document.addEventListener('DOMContentLoaded', function () {
 
-    const ctxEquipamentosZona =
-        document.getElementById('graficoEquipamentosZona');
-
-    if (!ctxEquipamentosZona || typeof dadosGraficoZona === 'undefined') {
-        return;
-    }
-
-    new Chart(ctxEquipamentosZona, {
-        type: 'bar',
-        data: {
-            labels: dadosGraficoZona.labels,
-            datasets: [{
-                label: 'Equipamentos',
-                backgroundColor: '#073a52',
-                borderColor: '#073a52',
-                borderWidth: 1,
-                borderRadius: 8,
-                data: dadosGraficoZona.valores
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-    });
-
-});
 // Localização teste
 function preencherTesteLocalizacao() {
 
@@ -874,6 +834,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         window.history.replaceState({}, document.title, window.location.pathname);
     }
+    const modalAdicionadoDocumento =
+        document.getElementById('modalAdicionadoDocumento');
+
+    if (params.get('adicionado') === '1' && modalAdicionadoDocumento) {
+
+        new bootstrap.Modal(modalAdicionadoDocumento).show();
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
     if (params.get('duplicado') === '1' && modalDocumentoDuplicado) {
         new bootstrap.Modal(modalDocumentoDuplicado).show();
 
@@ -1081,6 +1054,308 @@ if (document.getElementById('graficoCriticidade')) {
                 maintainAspectRatio: false,
 
                 indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
+
+/* DASHBOARD LOCALIZAÇÕES */
+
+if (document.getElementById('graficoZonas')) {
+
+    new Chart(
+        document.getElementById('graficoZonas'),
+        {
+            type: 'doughnut',
+
+            data: {
+                labels: zonas,
+
+                datasets: [{
+                    data: totaisZonas,
+
+                    backgroundColor: [
+                        '#0d6efd',
+                        '#20c997',
+                        '#ffc107',
+                        '#fd7e14'
+                    ]
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'left',
+
+                        labels: {
+                            boxWidth: 14,
+                            padding: 15,
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
+}
+
+if (document.getElementById('graficoTopHospitais')) {
+
+    new Chart(
+        document.getElementById('graficoTopHospitais'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: hospitaisTop,
+
+                datasets: [{
+                    label: 'Equipamentos',
+                    data: totaisHospitaisTop,
+                    backgroundColor: '#073a52',
+                    borderRadius: 8,
+                    barThickness: 24
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
+if (document.getElementById('graficoServicos')) {
+
+    new Chart(
+        document.getElementById('graficoServicos'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: servicos,
+
+                datasets: [{
+                    label: 'Equipamentos',
+                    data: totaisServicos,
+                    backgroundColor: '#20c997',
+                    borderRadius: 8,
+                    barThickness: 16
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            stepSize: 1
+                        }
+                    },
+                    y: {
+                        offset: true,
+                        ticks: {
+                            autoSkip: false,
+                            padding: 12
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
+
+/* DASHBOARD FORNECEDORES */
+
+if (document.getElementById('graficoTiposFornecedores')) {
+
+    new Chart(
+        document.getElementById('graficoTiposFornecedores'),
+        {
+            type: 'pie',
+
+            data: {
+                labels: tiposFornecedores,
+
+                datasets: [{
+                    data: totaisTiposFornecedores,
+                    backgroundColor: coresFornecedores
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'left',
+
+                        labels: {
+                            boxWidth: 14,
+                            padding: 15,
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
+}
+
+if (document.getElementById('graficoTopFornecedores')) {
+
+    new Chart(
+        document.getElementById('graficoTopFornecedores'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: fornecedoresTop,
+
+                datasets: [{
+                    label: 'Equipamentos associados',
+                    data: totaisFornecedoresTop,
+                    backgroundColor: '#073a52',
+                    borderRadius: 8,
+                    barThickness: 24
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            stepSize: 1
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false,
+                            padding: 10
+                        }
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
+/* DASHBOARD DOCUMENTAÇÃO */
+
+if (document.getElementById('graficoTiposDocumento')) {
+
+    new Chart(
+        document.getElementById('graficoTiposDocumento'),
+        {
+            type: 'doughnut',
+
+            data: {
+                labels: tiposDocumento,
+
+                datasets: [{
+                    data: totaisTiposDocumento
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'left'
+                    }
+                }
+            }
+        }
+    );
+}
+
+/* DASHBOARD FINANCEIRO */
+
+if (document.getElementById('graficoInvestimentoAno')) {
+
+    new Chart(
+        document.getElementById('graficoInvestimentoAno'),
+        {
+            type: 'line',
+
+            data: {
+                labels: anosInvestimento,
+
+                datasets: [{
+                    label: 'Investimento (€)',
+                    data: totaisInvestimento,
+                    borderColor: '#198754',
+                    backgroundColor: '#198754',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.3
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '€';
+                            }
+                        }
+                    }
+                },
+
                 plugins: {
                     legend: {
                         display: false

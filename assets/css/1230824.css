@@ -1867,4 +1867,62 @@ main {
 .criticidade-item strong{
     margin-left:auto;
 }
+.dashboard-sem-docs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
 
+    max-height: 245px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.dashboard-sem-docs::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dashboard-sem-docs::-webkit-scrollbar-thumb {
+    background: #b7c6cf;
+    border-radius: 10px;
+}
+
+.dashboard-sem-docs::-webkit-scrollbar-track {
+    background: #eef2f5;
+    border-radius: 10px;
+}
+
+.dashboard-sem-doc-item {
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #f8fafc;
+}
+
+.dashboard-sem-doc-item strong {
+    display: block;
+    color: #073a52;
+    margin-bottom: 3px;
+}
+
+.dashboard-sem-doc-item span {
+    color: #495057;
+    font-size: 0.9rem;
+}
+.dashboard-cards-financeiro {
+    grid-template-columns: repeat(1, 280px);
+}
+.financeiro-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.financeiro-card {
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.financeiro-grafico {
+    flex: 0 0 75%;
+}

@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt->execute()) {
-            header("Location: documentacao.php");
+            header("Location: documentacao.php?adicionado=1");
             exit;
         }
 

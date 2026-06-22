@@ -573,15 +573,12 @@ include 'includes/nav.php';
                                 <?php endforeach; ?>
 
                             </div>
-                            <!-- GRAFICO BARRAS EQ POR ZONAS -->
-                        </div>
-                        <h5 class="contratos-subtitulo mt-4">Distribuição de equipamentos por zona</h5>
-                        <div class="grafico-localizacoes-card">
-                            <canvas id="graficoEquipamentosZona" height="70"></canvas>
-                        </div>
+                            </div>
+                            
 
 
-                    <?php elseif ($zona !== 'Geral'): ?>
+                    
+                            <?php elseif ($zona !== 'Geral'): ?>
 
                         <div class="accordion localizacoes-accordion" id="accordion<?= str_replace(' ', '', $zona) ?>">
 
@@ -667,25 +664,9 @@ include 'includes/nav.php';
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-    const dadosGraficoZona = {
-        labels: [
-            <?php foreach ($ordemZonas as $zonaGrafico): ?>
-                <?php if ($zonaGrafico !== 'Geral'): ?> "<?= $zonaGrafico ?>",
-                <?php endif; ?>
-            <?php endforeach; ?>
-        ],
-        valores: [
-            <?php foreach ($ordemZonas as $zonaGrafico): ?>
-                <?php if ($zonaGrafico !== 'Geral'): ?>
-                    <?= $equipamentosPorZona[$zonaGrafico] ?? 0 ?>,
-                <?php endif; ?>
-            <?php endforeach; ?>
-        ]
-    };
-</script>
+
+
 
 <!-- Modal localização adicionada -->
 <div class="modal fade" id="modalLocalizacaoAdicionada" tabindex="-1">

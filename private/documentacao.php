@@ -545,6 +545,36 @@ include 'includes/nav.php';
             </div>
         </div>
 
+        <!-- Modal sucesso documento adicionado -->
+        <div class="modal fade" id="modalAdicionadoDocumento" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sucesso</h5>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+
+                        <p class="mb-0">
+                            Documento adicionado com sucesso!
+                        </p>
+                    </div>
+
+                    <div class="modal-footer justify-content-center">
+                        <button type="button"
+                            class="btn btn-success"
+                            data-bs-dismiss="modal">
+                            Fechar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
         <!--Modal sucesso de remoção documento -->
         <div class="modal fade" id="modalSucessoDocumento" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
