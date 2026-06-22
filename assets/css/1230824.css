@@ -1926,3 +1926,127 @@ main {
 .financeiro-grafico {
     flex: 0 0 75%;
 }
+
+/*XXXXXXXXXXXXX*/
+/*LOGIN*/
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #073a52, #0b5779);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-page-card {
+    width: 420px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.login-logo {
+    color: #073a52;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.login-logo span {
+    color: #2dd4a0;
+}
+
+.login-subtitulo {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.login-page-card label {
+    color: #073a52;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.login-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #dde7ec;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+}
+
+.login-input i {
+    color: #073a52;
+}
+
+.login-input input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.login-btn {
+    width: 100%;
+    border: none;
+    background: #073a52;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.login-btn:hover {
+    background: #0b5779;
+}
+.login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-logo-img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+.login-demo-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 15px 0 20px 0;
+}
+
+.btn-login-demo {
+    min-width: 150px;
+    border: 1px solid #d8dee3;
+    background: #f5f7f9;
+    color: #6c757d;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-login-demo:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+.btn-voltar-login {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+    color: #073a52;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-voltar-login:hover {
+    color: #0b5779;
+    text-decoration: none;
+}

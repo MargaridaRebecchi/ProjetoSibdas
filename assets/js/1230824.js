@@ -1365,3 +1365,29 @@ if (document.getElementById('graficoInvestimentoAno')) {
         }
     );
 }
+
+//XXXXXXXXXXXX
+// LOGIN
+
+
+function preencherAdmin() {
+
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+
+    if (!email || !password) return;
+
+    email.value = 'm.santos@medgest.pt';
+    password.value = '123456';
+}
+
+function preencherGestor() {
+
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+
+    if (!email || !password) return;
+
+    email.value = 'f.costa@hospital.pt';
+    password.value = '123456';
+}
