@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
 
             <div class="modal-body text-center">
-                <i class="fas fa-times-circle fa-3x text-danger mb-3"></i>
+                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
 
                 <p class="mb-0">
                     <?= htmlspecialchars($erroModal ?? '') ?>

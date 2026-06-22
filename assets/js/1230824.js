@@ -21,6 +21,55 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+// Navbar pública - link ativo ao fazer scroll
+document.addEventListener('DOMContentLoaded', function () {
+
+    const linksPublicos = document.querySelectorAll(
+        '.navbar-medgest .nav-link-medgest[href^="#"]'
+    );
+
+    const secoes = [];
+
+    linksPublicos.forEach(function (link) {
+        const id = link.getAttribute('href');
+
+        if (id && id !== '#') {
+            const secao = document.querySelector(id);
+
+            if (secao) {
+                secoes.push({
+                    id: id,
+                    link: link,
+                    secao: secao
+                });
+            }
+        }
+    });
+
+    if (secoes.length === 0) return;
+
+    function atualizarLinkAtivo() {
+        let secaoAtual = secoes[0];
+
+        secoes.forEach(function (item) {
+            const topo = item.secao.offsetTop - 120;
+
+            if (window.scrollY >= topo) {
+                secaoAtual = item;
+            }
+        });
+
+        linksPublicos.forEach(function (link) {
+            link.classList.remove('ativo');
+        });
+
+        secaoAtual.link.classList.add('ativo');
+    }
+
+    window.addEventListener('scroll', atualizarLinkAtivo);
+    atualizarLinkAtivo();
+
+});
 //INDEX - HERO- ESTATS
 document.addEventListener("DOMContentLoaded", function () {
     const numeros = document.querySelectorAll(".hero-stat-numero");
@@ -194,6 +243,130 @@ document.querySelectorAll('.localizacoes-tabs .nav-link')
         });
 
     });
+//XXXXXXXXXXXXXXXXXXX
+// MÓDULO LOCALIZAÇÕES - GRÁFICO
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const ctxEquipamentosZona =
+        document.getElementById('graficoEquipamentosZona');
+
+    if (!ctxEquipamentosZona || typeof dadosGraficoZona === 'undefined') {
+        return;
+    }
+
+    new Chart(ctxEquipamentosZona, {
+        type: 'bar',
+        data: {
+            labels: dadosGraficoZona.labels,
+            datasets: [{
+                label: 'Equipamentos',
+                backgroundColor: '#073a52',
+                borderColor: '#073a52',
+                borderWidth: 1,
+                borderRadius: 8,
+                data: dadosGraficoZona.valores
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+});
+// Localização teste
+function preencherTesteLocalizacao() {
+
+    document.querySelector('[name="zona"]').value = 'Centro';
+
+    document.querySelector('[name="hospital"]').value =
+        'Hospital de Aveiro';
+
+    document.querySelector('[name="edificio"]').value =
+        'Edifício Principal';
+
+    document.querySelector('[name="piso"]').value =
+        '1';
+
+    document.querySelector('[name="servico"]').value =
+        'Neurologia';
+
+    document.querySelector('[name="sala"]').value =
+        'N-101';
+
+}
+// Modais do módulo Localizações
+document.addEventListener('DOMContentLoaded', function () {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const modalAdicionada = document.getElementById('modalLocalizacaoAdicionada');
+    const modalDuplicada = document.getElementById('modalLocalizacaoDuplicada');
+    const modalZonaIncorreta = document.getElementById('modalHospitalZonaIncorreta');
+
+    if (params.get('localizacao_adicionada') === '1' && modalAdicionada) {
+        new bootstrap.Modal(modalAdicionada).show();
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (params.get('localizacao_duplicada') === '1' && modalDuplicada) {
+        new bootstrap.Modal(modalDuplicada).show();
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (params.get('hospital_zona_incorreta') === '1' && modalZonaIncorreta) {
+        new bootstrap.Modal(modalZonaIncorreta).show();
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+});
+// Validação automática hospital/zona
+document.addEventListener('DOMContentLoaded', function () {
+
+    const selectZona = document.querySelector('.form-adicionar-localizacao select[name="zona"]');
+    const inputHospital = document.querySelector('.form-adicionar-localizacao input[name="hospital"]');
+
+    if (!selectZona || !inputHospital || typeof hospitaisZonas === 'undefined') return;
+
+    inputHospital.addEventListener('blur', function () {
+
+        const hospitalInserido = inputHospital.value.trim().toLowerCase();
+
+        if (hospitalInserido === '') return;
+
+        Object.keys(hospitaisZonas).forEach(function (hospitalExistente) {
+
+            if (
+                hospitalExistente.trim().toLowerCase() === hospitalInserido &&
+                selectZona.value !== '' &&
+                hospitaisZonas[hospitalExistente] !== selectZona.value
+            ) {
+                alert(
+                    'Este hospital já está registado na zona ' +
+                    hospitaisZonas[hospitalExistente] +
+                    '.'
+                );
+            }
+
+        });
+
+    });
+
+});
+
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //MÓDULO FORNECEDORES
 //Validaçoes registo de fornecedores

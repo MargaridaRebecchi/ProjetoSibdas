@@ -848,7 +848,7 @@ main {
     background-color: #fff8e1;
 }
 .private-header {
-    margin-top: 20px;
+    margin-top: 90px;
     color: #073a52;
 }
 
@@ -1193,13 +1193,12 @@ main {
 }
 
 
-
-
 .resumo-zonas {
-    background: #ffffff;
-    border: 1px solid #dde7ec;
-    border-radius: 14px;
-    padding: 20px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-top: 25px;
 }
 
 .resumo-zonas h5 {
@@ -1238,6 +1237,129 @@ main {
     .resumo-localizacoes {
         grid-template-columns: 1fr;
     }
+}
+ /*BARRA PESQUISA*/
+    .pesquisa-localizacoes-form {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 25px;
+        max-width: 900px;
+    }
+
+    .pesquisa-localizacoes-form input {
+        flex: 1;
+    }
+
+    .btn-pesquisar-localizacao {
+        background-color: #073a52;
+        border-color: #073a52;
+        color: white;
+    }
+
+    .btn-pesquisar-localizacao:hover {
+        background-color: #0b5779;
+        border-color: #0b5779;
+        color: white;
+    }
+
+    .resultados-localizacoes {
+        margin-bottom: 30px;
+    }
+
+    .resultado-localizacao-card {
+        background: #ffffff;
+        border: 1px solid #dde7ec;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+    }
+
+    .resultado-localizacao-card strong {
+        color: #073a52;
+        font-weight: 700;
+    }
+
+    .resultado-localizacao-card p {
+        margin: 6px 0 2px;
+        color: #1a2c35;
+    }
+
+    .resultado-localizacao-card small {
+        color: #6c757d;
+    }
+
+
+    .resumo-localizacoes {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .resumo-localizacao-card {
+        background: #ffffff;
+        border: 1px solid #dde7ec;
+        border-radius: 12px;
+        padding: 18px 20px;
+    }
+
+    .resumo-localizacao-card h6 {
+        color: #6c757d;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .resumo-localizacao-card span {
+        color: #073a52;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .localizacoes-subtitulo {
+        color: #073a52;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+
+
+        display: inline-block;
+    }
+
+    .grafico-localizacoes-card {
+        background: #ffffff;
+        border: 1px solid #dde7ec;
+        border-radius: 14px;
+        padding: 20px;
+        margin-top: 25px auto 0;
+        max-width: 700px;
+    }
+
+    .grafico-localizacoes-card h5 {
+        color: #073a52;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .total-hospital {
+        margin-left: 8px;
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .total-servico {
+    margin-left: 8px;
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+.form-adicionar-localizacao {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 14px;
+    padding: 22px;
+    max-width: 900px;
 }
 /*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
 /*MODULO FORNECEDORES */

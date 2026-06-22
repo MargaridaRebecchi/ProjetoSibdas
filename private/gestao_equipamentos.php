@@ -296,8 +296,7 @@ include 'includes/nav.php';
                                             data-tipo-entrada="<?= htmlspecialchars($row['tipo_entrada']) ?>"
 
                                             data-estado="<?= htmlspecialchars($estadoTexto) ?>"
-                                            data-criticidade="<?= htmlspecialchars($criticidadeTexto) ?>"
-                                            data-registo="<?= htmlspecialchars($row['data_registo']) ?>">
+                                            data-criticidade="<?= htmlspecialchars($criticidadeTexto) ?>">
                                             <i class="fas fa-eye"></i>
                                         </button>
 
@@ -712,7 +711,6 @@ include 'includes/nav.php';
                 <div class="ficha-grid">
                     <div><strong>Estado atual</strong><span id="ver_estado"></span></div>
                     <div><strong>Criticidade</strong><span id="ver_criticidade"></span></div>
-                    <div><strong>Data de registo</strong><span id="ver_data_registo"></span></div>
                 </div>
 
             </div>
@@ -924,7 +922,7 @@ include 'includes/nav.php';
 
         texto('ver_estado', capitalizar(botao.getAttribute('data-estado')));
         texto('ver_criticidade', capitalizar(botao.getAttribute('data-criticidade')));
-        texto('ver_data_registo', formatarDataHora(botao.getAttribute('data-registo')));
+        
     });
 
     function capitalizar(texto) {

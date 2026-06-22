@@ -1,7 +1,91 @@
 <?php
 include 'includes/db.php';
 
+/*Inserir localizações */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_localizacao'])) {
 
+    $zona = trim($_POST['zona']);
+    $hospital = trim($_POST['hospital']);
+    $edificio = trim($_POST['edificio']);
+    $piso = trim($_POST['piso']);
+    $servico = trim($_POST['servico']);
+    $sala = trim($_POST['sala']);
+
+    if ($zona !== '' && $hospital !== '') {
+
+        /* Verificar se a localização já existe */
+        $stmtExiste = $conn->prepare("
+        SELECT id_localizacao
+        FROM localizacoes_
+        WHERE LOWER(TRIM(zona)) = LOWER(TRIM(?))
+          AND LOWER(TRIM(hospital)) = LOWER(TRIM(?))
+          AND LOWER(TRIM(COALESCE(edificio, ''))) = LOWER(TRIM(?))
+          AND LOWER(TRIM(COALESCE(piso, ''))) = LOWER(TRIM(?))
+          AND LOWER(TRIM(COALESCE(servico, ''))) = LOWER(TRIM(?))
+          AND LOWER(TRIM(COALESCE(sala, ''))) = LOWER(TRIM(?))
+        LIMIT 1
+    ");
+
+        $stmtExiste->bind_param(
+            "ssssss",
+            $zona,
+            $hospital,
+            $edificio,
+            $piso,
+            $servico,
+            $sala
+        );
+
+        $stmtExiste->execute();
+        $resultadoExiste = $stmtExiste->get_result();
+
+        if ($resultadoExiste->num_rows > 0) {
+            header("Location: localizacoes.php?localizacao_duplicada=1");
+            exit;
+        }
+
+        /* Verificar se o hospital já existe noutra zona */
+        $stmtHospital = $conn->prepare("
+        SELECT zona
+        FROM localizacoes_
+        WHERE LOWER(TRIM(hospital)) = LOWER(TRIM(?))
+          AND LOWER(TRIM(zona)) <> LOWER(TRIM(?))
+        LIMIT 1
+    ");
+
+        $stmtHospital->bind_param("ss", $hospital, $zona);
+        $stmtHospital->execute();
+
+        $resultadoHospital = $stmtHospital->get_result();
+
+        if ($resultadoHospital->num_rows > 0) {
+            header("Location: localizacoes.php?hospital_zona_incorreta=1");
+            exit;
+        }
+
+        /* Inserir localização */
+        $stmt = $conn->prepare("
+        INSERT INTO localizacoes_
+        (zona, hospital, edificio, piso, servico, sala)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+
+        $stmt->bind_param(
+            "ssssss",
+            $zona,
+            $hospital,
+            $edificio,
+            $piso,
+            $servico,
+            $sala
+        );
+
+        $stmt->execute();
+
+        header("Location: localizacoes.php?localizacao_adicionada=1");
+        exit;
+    }
+}
 $sql = "SELECT 
             l.id_localizacao,
             l.zona,
@@ -90,27 +174,14 @@ $ordemZonas = [
     'Algarve'
 ];
 
-$hospitaisPorZona = [
-    'Norte' => [
-        'Hospital São João',
-        'Hospital Santo António',
-        'Hospital de Braga',
-        'Hospital de Viseu',
-        'IPO Porto'
-    ],
-    'Centro' => [
-        'Centro Hospitalar e Universitário de Coimbra',
-        'Hospital Distrital de Leiria'
-    ],
-    'Lisboa e Vale do Tejo' => [
-        'Centro Hospitalar Lisboa Norte',
-        'Hospital Santa Maria',
-        'Hospital Garcia de Orta'
-    ],
-    'Algarve' => [
-        'Hospital de Faro'
-    ]
-];
+$hospitaisPorZona = [];
+
+foreach ($dados as $zonaDados => $hospitais) {
+    if ($zonaDados !== 'Geral') {
+        $hospitaisPorZona[$zonaDados] = array_keys($hospitais);
+        sort($hospitaisPorZona[$zonaDados]);
+    }
+}
 
 function mostrarHospital($dados, $zona, $hospital, $idHospital)
 {
@@ -370,6 +441,18 @@ include 'includes/nav.php';
 
             <?php endforeach; ?>
 
+            <li class="nav-item" role="presentation">
+                <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#adicionar-localizacao"
+                    type="button"
+                    role="tab">
+                    Adicionar localização
+                </button>
+
+            </li>
+
         </ul>
 
         <div class="tab-content localizacoes-tab-content">
@@ -404,9 +487,7 @@ include 'includes/nav.php';
 
                             <div class="resultados-localizacoes">
 
-                                <h5 class="localizacoes-subtitulo">
-                                    Resultados da pesquisa
-                                </h5>
+                                <h5 class="contratos-subtitulo mt-4">Resultados da pesquisa</h5>
 
                                 <?php if (!empty($resultadosPesquisa)): ?>
 
@@ -474,7 +555,7 @@ include 'includes/nav.php';
                         <!-- CARDS EQ POR ZONAS -->
                         <div class="resumo-zonas">
 
-                            <h5 class="localizacoes-subtitulo">Equipamentos por zona</h5>
+                            <h5 class="contratos-subtitulo mt-4">Equipamentos por zona</h5>
 
                             <div class="resumo-localizacoes">
 
@@ -494,7 +575,7 @@ include 'includes/nav.php';
                             </div>
                             <!-- GRAFICO BARRAS EQ POR ZONAS -->
                         </div>
-                        <h5 class="localizacoes-subtitulo">Distribuição de equipamentos por zona</h5>
+                        <h5 class="contratos-subtitulo mt-4">Distribuição de equipamentos por zona</h5>
                         <div class="grafico-localizacoes-card">
                             <canvas id="graficoEquipamentosZona" height="70"></canvas>
                         </div>
@@ -520,181 +601,181 @@ include 'includes/nav.php';
                 </div>
 
             <?php endforeach; ?>
+            <!--Adicionar Localização -->
+            <div
+                class="tab-pane fade"
+                id="adicionar-localizacao"
+                role="tabpanel">
 
+                <form method="POST" class="form-adicionar-localizacao">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label>Zona *</label>
+                            <select name="zona" class="form-select form-select-sm" required>
+                                <option value="">Selecionar zona</option>
+                                <option value="Norte">Norte</option>
+                                <option value="Centro">Centro</option>
+                                <option value="Lisboa e Vale do Tejo">Lisboa e Vale do Tejo</option>
+                                <option value="Algarve">Algarve</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Hospital *</label>
+                            <input type="text" name="hospital" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Edifício *</label>
+                            <input type="text" name="edificio" class="form-control form-control-sm required">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Piso *</label>
+                            <input type="text" name="piso" class="form-control form-control-sm required">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Serviço *</label>
+                            <input type="text" name="servico" class="form-control form-control-sm required">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Sala *</label>
+                            <input type="text" name="sala" class="form-control form-control-sm required">
+                        </div>
+
+                    </div>
+
+                    <button type="submit" name="adicionar_localizacao" class="btn-primario">
+                        Adicionar localização
+                    </button>
+
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="preencherTesteLocalizacao()">
+                        Preencher teste
+                    </button>
+
+                </form>
+
+            </div>
         </div>
 
     </section>
 
 
 </main>
-<script src="../assets/js/1230824.js"></script>
-<style>
-    /*BARRA PESQUISA*/
-    .pesquisa-localizacoes-form {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 25px;
-        max-width: 900px;
-    }
 
-    .pesquisa-localizacoes-form input {
-        flex: 1;
-    }
-
-    .btn-pesquisar-localizacao {
-        background-color: #073a52;
-        border-color: #073a52;
-        color: white;
-    }
-
-    .btn-pesquisar-localizacao:hover {
-        background-color: #0b5779;
-        border-color: #0b5779;
-        color: white;
-    }
-
-    .resultados-localizacoes {
-        margin-bottom: 30px;
-    }
-
-    .resultado-localizacao-card {
-        background: #ffffff;
-        border: 1px solid #dde7ec;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-bottom: 10px;
-    }
-
-    .resultado-localizacao-card strong {
-        color: #073a52;
-        font-weight: 700;
-    }
-
-    .resultado-localizacao-card p {
-        margin: 6px 0 2px;
-        color: #1a2c35;
-    }
-
-    .resultado-localizacao-card small {
-        color: #6c757d;
-    }
-
-
-    .resumo-localizacoes {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .resumo-localizacao-card {
-        background: #ffffff;
-        border: 1px solid #dde7ec;
-        border-radius: 12px;
-        padding: 18px 20px;
-    }
-
-    .resumo-localizacao-card h6 {
-        color: #6c757d;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-    }
-
-    .resumo-localizacao-card span {
-        color: #073a52;
-        font-size: 2rem;
-        font-weight: 700;
-    }
-
-    .localizacoes-subtitulo {
-        color: #073a52;
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-
-
-        display: inline-block;
-    }
-
-    .grafico-localizacoes-card {
-        background: #ffffff;
-        border: 1px solid #dde7ec;
-        border-radius: 14px;
-        padding: 20px;
-        margin-top: 25px auto 0;
-        max-width: 700px;
-    }
-
-    .grafico-localizacoes-card h5 {
-        color: #073a52;
-        font-weight: 700;
-        margin-bottom: 18px;
-    }
-
-    .total-hospital {
-        margin-left: 8px;
-        font-weight: 600;
-        color: #6c757d;
-        font-size: 0.9rem;
-    }
-    .total-servico {
-    margin-left: 8px;
-    font-weight: 600;
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-</style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const ctxEquipamentosZona = document.getElementById('graficoEquipamentosZona');
+    const dadosGraficoZona = {
+        labels: [
+            <?php foreach ($ordemZonas as $zonaGrafico): ?>
+                <?php if ($zonaGrafico !== 'Geral'): ?> "<?= $zonaGrafico ?>",
+                <?php endif; ?>
+            <?php endforeach; ?>
+        ],
+        valores: [
+            <?php foreach ($ordemZonas as $zonaGrafico): ?>
+                <?php if ($zonaGrafico !== 'Geral'): ?>
+                    <?= $equipamentosPorZona[$zonaGrafico] ?? 0 ?>,
+                <?php endif; ?>
+            <?php endforeach; ?>
+        ]
+    };
+</script>
 
-    if (ctxEquipamentosZona) {
-        new Chart(ctxEquipamentosZona, {
-            type: 'bar',
-            data: {
-                labels: [
-                    <?php foreach ($ordemZonas as $zonaGrafico): ?>
-                        <?php if ($zonaGrafico !== 'Geral'): ?> "<?= $zonaGrafico ?>",
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                ],
-                datasets: [{
-                    label: 'Equipamentos',
-                    backgroundColor: '#073a52',
-                    borderColor: '#073a52',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    data: [
-                        <?php foreach ($ordemZonas as $zonaGrafico): ?>
-                            <?php if ($zonaGrafico !== 'Geral'): ?>
-                                <?= $equipamentosPorZona[$zonaGrafico] ?? 0 ?>,
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
-                        }
-                    }
-                }
-            }
-        });
+<!-- Modal localização adicionada -->
+<div class="modal fade" id="modalLocalizacaoAdicionada" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Sucesso</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <p class="mb-0">Localização adicionada com sucesso!</p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal localização duplicada -->
+<div class="modal fade" id="modalLocalizacaoDuplicada" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Localização já existente</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                <p class="mb-0">Já existe uma localização com os mesmos dados.</p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal erro hospital noutra zona -->
+<div class="modal fade" id="modalHospitalZonaIncorreta" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Zona incorreta</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                <p class="mb-0">
+                    Este hospital já está registado noutra zona. Confirme a zona antes de adicionar a localização.
+                </p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+const hospitaisZonas = {
+    <?php
+    $paresHospitalZona = [];
+
+    foreach ($dados as $zonaDados => $hospitais) {
+        foreach ($hospitais as $hospitalNome => $servicos) {
+            $paresHospitalZona[$hospitalNome] = $zonaDados;
+        }
     }
+
+    foreach ($paresHospitalZona as $hospitalNome => $zonaNome):
+    ?>
+        "<?= htmlspecialchars($hospitalNome, ENT_QUOTES) ?>": "<?= htmlspecialchars($zonaNome, ENT_QUOTES) ?>",
+    <?php endforeach; ?>
+};
 </script>
 <?php include 'includes/footer.php'; ?>
