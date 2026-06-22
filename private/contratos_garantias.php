@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/auth.php';
 include 'includes/db.php';
 
 $total = $conn->query("SELECT COUNT(*) AS total FROM contratos_garantias")->fetch_assoc()['total'];

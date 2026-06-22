@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/auth.php';
 include 'includes/db.php';
 include 'includes/header.php';
 include 'includes/nav.php';

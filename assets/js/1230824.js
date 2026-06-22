@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //INDEX- VALIDAÇOES FORMULARIO CONTACTO
-// ── Validação do formulário de contacto ──────────────────────────
+//Validação do formulário de contacto
 document.addEventListener("DOMContentLoaded", function () {
 
   const formContacto = document.getElementById("formContacto");
@@ -122,20 +122,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const campos = formContacto.querySelectorAll(".form-control-medgest");
 
   formContacto.addEventListener("submit", function (e) {
-    e.preventDefault();
 
     let formValido = true;
 
     campos.forEach(function (campo) {
-      if (!validarCampo(campo)) {
-        formValido = false;
-      }
+        if (!validarCampo(campo)) {
+            formValido = false;
+        }
     });
 
-    if (formValido) {
-      mostrarSucesso();
+    if (!formValido) {
+        e.preventDefault();
     }
-  });
+});
 
   campos.forEach(function (campo) {
     campo.addEventListener("blur", function () {
@@ -170,12 +169,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     else if (campo.id === "telefone" && campo.value.trim() !== "") {
-      const regexTelefone = /^[0-9+\s()-]{9,15}$/;
 
-      if (!regexTelefone.test(campo.value.trim())) {
-        valido = false;
-        texto = "Introduza um número de telefone válido.";
-      }
+        const regexTelefone = /^[0-9]{9}$/;
+
+        if (!regexTelefone.test(campo.value.trim())) {
+            valido = false;
+            texto = "O telefone deve ter exatamente 9 dígitos.";
+        }
     }
 
     else if (campo.id === "mensagem" && campo.value.trim().length < 10) {
@@ -222,6 +222,45 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 });
+
+// MENSAGEM CONTACTO ENVIADA
+document.addEventListener('DOMContentLoaded', function () {
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('mensagem_enviada') === '1') {
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
+
+});
+
+// Mensagem de teste
+function preencherContactoTeste() {
+
+    document.getElementById('nome').value =
+        'João Ferreira';
+
+    document.getElementById('email').value =
+        'joao.ferreira@hospital.pt';
+
+    document.getElementById('telefone').value =
+        '912345678';
+
+    document.getElementById('instituicao').value =
+        'Hospital de São João';
+
+    document.getElementById('assunto').value =
+        'informacoes';
+
+    document.getElementById('mensagem').value =
+        'Gostaria de obter mais informações sobre as funcionalidades da plataforma MedGest e sobre a sua implementação numa unidade hospitalar.';
+}
+
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // MODULO LOCALIZAÇÕES
@@ -1391,3 +1430,47 @@ function preencherGestor() {
     email.value = 'f.costa@hospital.pt';
     password.value = '123456';
 }
+
+//XXXXXXXXXXX
+//ADMIN PRIVADO
+//MENSAGENS
+
+// Modal de sucesso ao apagar mensagem
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const modalSucessoMensagem = document.getElementById('modalSucessoMensagem');
+
+    if (params.get('mensagem_apagada') === '1' && modalSucessoMensagem) {
+
+        new bootstrap.Modal(modalSucessoMensagem).show();
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
+
+});
+
+//CONTEUDO PUBLICO
+// Modal de sucesso ao alterar conteudo publico
+document.addEventListener('DOMContentLoaded', function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const modalSucessoConteudo = document.getElementById('modalSucessoConteudo');
+
+    if (params.get('conteudo_atualizado') === '1' && modalSucessoConteudo) {
+
+        new bootstrap.Modal(modalSucessoConteudo).show();
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
+
+});

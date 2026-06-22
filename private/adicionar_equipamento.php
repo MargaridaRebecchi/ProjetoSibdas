@@ -1,4 +1,6 @@
-<?php include 'includes/db.php'; ?>
+<?php 
+require_once 'includes/auth.php';
+include 'includes/db.php'; ?>
 
 
 <?php

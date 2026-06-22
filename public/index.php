@@ -1,5 +1,58 @@
 <?php
+session_start();
 require_once __DIR__ . '/../config/config.php';
+include __DIR__ . '/../private/includes/db.php';
+
+/*Alteração dos conteudos publicos */
+$conteudosPublicos = [];
+
+$resultConteudos = $conn->query("
+    SELECT chave, titulo, texto
+    FROM conteudos_publicos
+");
+
+while ($c = $resultConteudos->fetch_assoc()) {
+  $conteudosPublicos[$c['chave']] = [
+    'titulo' => $c['titulo'],
+    'texto' => $c['texto']
+  ];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar_contacto'])) {
+
+  $nome = trim($_POST['nome']);
+  $email = trim($_POST['email']);
+  $telefone = trim($_POST['telefone']);
+  $instituicao = trim($_POST['instituicao']);
+  $assunto = trim($_POST['assunto']);
+  $mensagem = trim($_POST['mensagem']);
+
+  if ($nome && $email && $instituicao && $assunto && $mensagem) {
+
+    $stmt = $conn->prepare("
+            INSERT INTO mensagens_contacto
+            (nome, email, telefone, instituicao, assunto, mensagem)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+
+    $stmt->bind_param(
+      "ssssss",
+      $nome,
+      $email,
+      $telefone,
+      $instituicao,
+      $assunto,
+      $mensagem
+    );
+
+    $stmt->execute();
+
+    $_SESSION['mensagem_enviada'] = true;
+
+    header("Location: index.php#contacto");
+    exit;
+  }
+}
 ?>
 
 
@@ -137,19 +190,13 @@ require_once __DIR__ . '/../config/config.php';
         <div class="sobre-conteudo animar-direita">
           <div class="secao-etiqueta">Sobre a MedGest</div>
           <h2 class="secao-titulo mb-4">
-            Inovação digital para unidades de saúde
+
+            <?= htmlspecialchars($conteudosPublicos['sobre']['titulo']) ?>
           </h2>
           <p>
-            A <strong>MedGest</strong> é uma plataforma digital de gestão de equipamentos médicos,
-            desenvolvida para centralizar e organizar toda a informação relacionada com o inventário hospitalar.
-            O sistema permite acompanhar equipamentos, documentação técnica, fornecedores e estados de manutenção
-            de forma simples, rápida e segura.
+            <?= nl2br(htmlspecialchars($conteudosPublicos['sobre']['texto'])) ?>
           </p>
-          <p>
-            Concebida para responder às necessidades das unidades de saúde, a MedGest facilita o controlo
-            operacional e melhora a rastreabilidade dos equipamentos médicos, contribuindo para uma gestão
-            mais eficiente, organizada e acessível em qualquer dispositivo.
-          </p>
+
           <div class="sobre-valores">
             <div class="valor-item">
               <div class="valor-icone"><i class="fas fa-shield-halved"></i></div>
@@ -189,11 +236,13 @@ require_once __DIR__ . '/../config/config.php';
   <section id="servicos" class="secao-servicos">
     <div class="container text-center">
       <div class="secao-etiqueta animar-entrada">O que oferecemos</div>
-      <h2 class="secao-titulo animar-entrada" data-delay="100">Os nossos serviços</h2>
-      <p class="secao-subtitulo animar-entrada" data-delay="150">
-        Soluções completas para modernizar a gestão tecnológica da sua instituição de saúde.
-      </p>
+      <h2 class="secao-titulo animar-entrada" data-delay="100">
+        <?= htmlspecialchars($conteudosPublicos['servicos']['titulo']) ?>
+      </h2>
 
+      <p class="secao-subtitulo animar-entrada" data-delay="150">
+        <?= nl2br(htmlspecialchars($conteudosPublicos['servicos']['texto'])) ?>
+      </p>
       <div class="servicos-grid">
 
         <div class="servico-cartao animar-entrada" data-delay="0">
@@ -270,7 +319,9 @@ require_once __DIR__ . '/../config/config.php';
   <section id="funcionalidades" class="secao-funcionalidades">
     <div class="container text-center">
       <div class="secao-etiqueta animar-entrada">Todas as funcionalidades</div>
-      <h2 class="secao-titulo animar-entrada" data-delay="100"> Tudo o que precisa numa única plataforma</h2>
+      <h2 class="secao-titulo animar-entrada" data-delay="100">
+        <?= htmlspecialchars($conteudosPublicos['funcionalidades']['titulo']) ?>
+      </h2>
       <div class="func-lista">
         <div class="func-item animar-entrada" data-delay="0">
           <div class="func-check"><i class="fas fa-check"></i></div>
@@ -319,9 +370,12 @@ require_once __DIR__ . '/../config/config.php';
   <section id="testemunhos" class="secao-testemunhos">
     <div class="container text-center">
       <div class="secao-etiqueta animar-entrada">O que dizem os nossos clientes</div>
-      <h2 class="secao-titulo animar-entrada" data-delay="100">Parceiros que confiam na MedGest</h2>
+      <h2 class="secao-titulo animar-entrada" data-delay="100">
+        <?= htmlspecialchars($conteudosPublicos['testemunhos']['titulo']) ?>
+      </h2>
+
       <p class="secao-subtitulo animar-entrada" data-delay="150">
-        Mais de 47 instituições de saúde em Portugal utilizam a nossa plataforma diariamente.
+        <?= nl2br(htmlspecialchars($conteudosPublicos['testemunhos']['texto'])) ?>
       </p>
 
       <div class="row g-4 mt-2">
@@ -387,57 +441,66 @@ require_once __DIR__ . '/../config/config.php';
     <div class="container">
       <div class="text-center mb-5">
         <div class="secao-etiqueta animar-entrada">Entre em contacto</div>
-        <h2 class="secao-titulo animar-entrada" data-delay="100">Fale connosco</h2>
+        <h2 class="secao-titulo animar-entrada" data-delay="100">
+          <?= htmlspecialchars($conteudosPublicos['contacto']['titulo']) ?>
+        </h2>
+
         <p class="secao-subtitulo animar-entrada" data-delay="150">
-          Solicite uma demonstração gratuita ou esclareça as suas dúvidas.
+          <?= nl2br(htmlspecialchars($conteudosPublicos['contacto']['texto'])) ?>
         </p>
       </div>
 
       <div class="contacto-wrapper animar-entrada" data-delay="100">
         <div class="row g-5">
 
-          <!-- Formulário -->
+          <!-- Formulário de contacto-->
           <div class="col-lg-7">
-            <form id="formContacto" novalidate>
+            <form id="formContacto" method="POST">
+              <input type="hidden" name="enviar_contacto" value="1">
+
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label-medgest" for="nome">Nome completo <span style="color:#ef4444;">*</span></label>
-                  <input type="text" id="nome" class="form-control-medgest" required
+                  <input type="text" id="nome" name="nome" class="form-control-medgest" required
                     placeholder="Ex: Maria Santos" aria-describedby="msg-nome" />
                   <div id="msg-nome" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
+
                 <div class="col-md-6">
                   <label class="form-label-medgest" for="email">Email<span style="color:#ef4444;">*</span></label>
-                  <input type="email" id="email" class="form-control-medgest" required
+                  <input type="email" id="email" name="email" class="form-control-medgest" required
                     placeholder="Ex: maria@hospital.pt" aria-describedby="msg-email" />
                   <div id="msg-email" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
+
                 <div class="col-md-6">
                   <label class="form-label-medgest" for="telefone">Telefone</label>
-                  <input type="tel" id="telefone" class="form-control-medgest"
+                  <input type="tel" id="telefone" name="telefone" class="form-control-medgest"
                     placeholder="Ex: 222 000 000" aria-describedby="msg-telefone" />
                   <div id="msg-telefone" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
+
                 <div class="col-md-6">
                   <label class="form-label-medgest" for="instituicao">Instituição <span style="color:#ef4444;">*</span></label>
-                  <input type="text" id="instituicao" class="form-control-medgest" required
+                  <input type="text" id="instituicao" name="instituicao" class="form-control-medgest" required
                     placeholder="Ex: Centro Hospitalar Lisboa Norte" aria-describedby="msg-instituicao" />
                   <div id="msg-instituicao" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
+
                 <div class="col-12">
                   <label class="form-label-medgest" for="assunto">Assunto <span style="color:#ef4444;">*</span></label>
-                  <select id="assunto" class="form-control-medgest" required aria-describedby="msg-assunto">
+                  <select id="assunto" name="assunto" class="form-control-medgest" required aria-describedby="msg-assunto">
                     <option value="">Selecione um assunto…</option>
-                    <option value="demo">Solicitar demonstração</option>
-                    <option value="orcamento">Pedido de orçamento</option>
-                    <option value="suporte">Suporte técnico</option>
+                    <option value="informacoes">Pedido de informações</option>
+                    <option value="suporte">Suporte da plataforma</option>
                     <option value="outro">Outro</option>
                   </select>
                   <div id="msg-assunto" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
+
                 <div class="col-12">
                   <label class="form-label-medgest" for="mensagem">Mensagem <span style="color:#ef4444;">*</span></label>
-                  <textarea id="mensagem" class="form-control-medgest" required rows="5"
+                  <textarea id="mensagem" name="mensagem" class="form-control-medgest" required rows="5"
                     placeholder="Faça a sua questão" aria-describedby="msg-mensagem"></textarea>
                   <div id="msg-mensagem" class="form-controle-mensagem" aria-live="polite"></div>
                 </div>
@@ -445,9 +508,21 @@ require_once __DIR__ . '/../config/config.php';
                   <p style="font-size: 0.8rem; color: var(--cor-texto-suave); margin-bottom: 1rem;">
                     <span style="color:#ef4444;">*</span> Campos obrigatórios
                   </p>
-                  <button type="submit" class="btn-primario w-100" style="border-radius: 12px; justify-content: center;">
-                    <i class="fas fa-paper-plane me-2"></i>Enviar mensagem
+                  <button type="submit" class="btn-primario w-100" id="btnEnviarContacto" style="border-radius: 12px; justify-content: center;">
+                    <?php if (isset($_SESSION['mensagem_enviada'])): ?>
+                      <i class="fas fa-check me-2"></i>Mensagem enviada com sucesso!
+                      <?php unset($_SESSION['mensagem_enviada']); ?>
+                    <?php else: ?>
+                      <i class="fas fa-paper-plane me-2"></i>Enviar mensagem
+                    <?php endif; ?>
                   </button>
+                  <div class="text-center mt-2">
+
+                    <button type="button" class="btn-login-demo" onclick="preencherContactoTeste()">
+                      Preencher formulário teste
+                    </button>
+
+                  </div>
                 </div>
               </div>
             </form>

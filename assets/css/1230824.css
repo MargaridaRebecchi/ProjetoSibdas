@@ -2050,3 +2050,181 @@ main {
     color: #0b5779;
     text-decoration: none;
 }
+
+/*XXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+/* BACKOFFICE ADMIN */
+
+.admin-publico-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.admin-publico-card,
+.admin-mensagem-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.admin-publico-card h5 {
+    color: #073a52;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.admin-publico-card label {
+    color: #073a52;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.admin-mensagens-lista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.admin-mensagem-card {
+    background: #ffffff;
+    border: 1px solid #dde7ec;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(7, 58, 82, 0.06);
+}
+
+.admin-mensagem-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.admin-remetente {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #073a52;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.admin-remetente strong {
+    display: block;
+    color: #073a52;
+    font-weight: 700;
+}
+
+.admin-remetente small {
+    color: #6c757d;
+}
+
+.admin-mensagem-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    color: #6c757d;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+}
+
+.admin-assunto {
+    background: #f5f8fa;
+    border-left: 4px solid #2dd4a0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #073a52;
+    margin-bottom: 12px;
+}
+
+.admin-mensagem-texto {
+    color: #1a2c35;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.admin-mensagem-acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-admin-mensagem {
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-admin-lida {
+    background: #eef2f5;
+    color: #495057;
+}
+
+.btn-admin-lida:hover {
+    background: #dde7ec;
+    color: #343a40;
+}
+
+.btn-admin-respondida {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.btn-admin-respondida:hover {
+    background: #badbcc;
+    color: #0f5132;
+}
+
+.btn-admin-apagar {
+    background: #fdeaea;
+    color: #dc3545;
+    border: none;
+}
+
+.btn-admin-apagar:hover {
+    background: #f8d7da;
+    color: #b02a37;
+    border: none;
+}
+
+.admin-estado {
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.estado-nova {
+    background: rgba(7, 58, 82, 0.12);
+    color: #073a52;
+}
+
+.estado-lida {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.estado-respondida {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+@media (max-width: 992px) {
+    .admin-mensagens-lista {
+        grid-template-columns: 1fr;
+    }
+}
